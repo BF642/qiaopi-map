@@ -6,552 +6,634 @@
 <title>闽南侨批地图 · 海丝记忆</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Cinzel:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Cinzel:wght@400;600;700&family=Ma+Shan+Zheng&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Noto Serif SC', serif;
-    background: #3e2f1c;
-    overflow: hidden;
-    height: 100vh;
-    user-select: none;
-  }
+body {
+  font-family: 'Noto Serif SC', serif;
+  background: #1a1208;
+  overflow: hidden;
+  height: 100vh;
+  user-select: none;
+}
 
-  /* ---- 航海罗盘装饰 ---- */
-  .compass-rose {
-    position: fixed;
-    top: 28px;
-    right: 28px;
-    width: 100px;
-    height: 100px;
-    z-index: 1000;
-    pointer-events: none;
-    opacity: 0.75;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
-  }
-  .compass-rose svg { width: 100%; height: 100%; }
+/* ===== 噪声纹理 ===== */
+.noise-layer {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 3;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+}
 
-  /* ---- 地图容器 ---- */
-  #map {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    z-index: 1;
-  }
+/* ===== 地图容器 ===== */
+#map {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1;
+}
 
-  /* 羊皮纸滤镜 */
-  .parchment-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    pointer-events: none;
-    z-index: 2;
-    background:
-      radial-gradient(ellipse at 30% 20%, rgba(210,180,140,0.15) 0%, transparent 60%),
-      radial-gradient(ellipse at 70% 80%, rgba(139,90,43,0.12) 0%, transparent 60%),
-      radial-gradient(ellipse at 50% 50%, rgba(180,145,100,0.08) 0%, transparent 70%);
-  }
+/* 瓦片做旧 */
+#map .leaflet-tile {
+  filter: sepia(0.6) saturate(0.55) brightness(1.08) contrast(0.88) hue-rotate(8deg);
+}
+#map .leaflet-tile-pane { opacity: 0.9; }
 
-  /* 地图瓦片做旧 */
-  #map .leaflet-tile {
-    filter: sepia(0.55) saturate(0.7) brightness(1.05) contrast(0.9) hue-rotate(5deg);
-  }
-  #map .leaflet-tile-pane { opacity: 0.92; }
+/* ===== 羊皮纸叠加层 ===== */
+.parchment-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 2;
+  background:
+    /* 中央高光 */
+    radial-gradient(ellipse 60% 50% at 55% 45%, rgba(220,200,160,0.08) 0%, transparent 70%),
+    /* 边缘暗角 - 四角 */
+    radial-gradient(ellipse 120% 100% at 50% 50%, transparent 40%, rgba(30,18,5,0.45) 100%),
+    /* 斑点污渍 */
+    radial-gradient(ellipse 80px 60px at 18% 72%, rgba(139,90,43,0.12) 0%, transparent 100%),
+    radial-gradient(ellipse 120px 80px at 75% 25%, rgba(139,90,43,0.10) 0%, transparent 100%),
+    radial-gradient(ellipse 60px 90px at 62% 82%, rgba(160,110,50,0.08) 0%, transparent 100%),
+    radial-gradient(ellipse 100px 50px at 28% 38%, rgba(139,90,43,0.07) 0%, transparent 100%);
+}
 
-  /* ---- 侧边信息面板 ---- */
-  .side-panel {
-    position: fixed;
-    left: 0; top: 0;
-    width: 380px; height: 100%;
-    z-index: 1000;
-    background: linear-gradient(180deg,
-      rgba(45,30,15,0.94) 0%,
-      rgba(62,47,28,0.94) 30%,
-      rgba(50,35,18,0.94) 100%
+/* ===== 地图装饰边框 ===== */
+.map-border {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 999;
+  border: 8px solid transparent;
+  border-image: linear-gradient(135deg,
+    rgba(196,162,101,0.5) 0%, rgba(139,115,85,0.3) 25%,
+    rgba(196,162,101,0.2) 50%, rgba(139,115,85,0.3) 75%,
+    rgba(196,162,101,0.5) 100%
+  ) 1;
+}
+
+/* 四角装饰 */
+.corner-decor {
+  position: fixed; pointer-events: none; z-index: 1001;
+  width: 60px; height: 60px;
+  opacity: 0.55;
+}
+.corner-decor svg { width: 100%; height: 100%; }
+.corner-tl { top: 8px; left: 388px; }
+.corner-tr { top: 8px; right: 8px; transform: scaleX(-1); }
+.corner-bl { bottom: 8px; left: 388px; transform: scaleY(-1); }
+.corner-br { bottom: 8px; right: 8px; transform: scale(-1,-1); }
+@media (max-width: 768px) { .corner-tl, .corner-bl { left: 308px; } }
+
+/* ===== 航海罗盘 ===== */
+.compass-rose {
+  position: fixed; top: 20px; right: 20px;
+  width: 110px; height: 110px; z-index: 1000;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 10px rgba(0,0,0,.55));
+}
+.compass-rose svg { width: 100%; height: 100%; animation: compassFloat 6s ease-in-out infinite; }
+@keyframes compassFloat {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(1.5deg); }
+  75% { transform: rotate(-1.5deg); }
+}
+
+/* ===== 侧边面板 ===== */
+.side-panel {
+  position: fixed; left: 0; top: 0;
+  width: 380px; height: 100%;
+  z-index: 1000;
+  background:
+    linear-gradient(180deg,
+      rgba(35,22,10,0.96) 0%,
+      rgba(50,35,18,0.96) 30%,
+      rgba(40,25,12,0.96) 100%
     );
-    color: #e8d5b0;
-    display: flex;
-    flex-direction: column;
-    border-right: 3px solid #8b7355;
-    box-shadow: 8px 0 30px rgba(0,0,0,.6);
-    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
-  }
-  .side-panel.collapsed { transform: translateX(-380px); }
+  color: #e8d5b0;
+  display: flex; flex-direction: column;
+  border-right: 2px solid rgba(196,162,101,0.35);
+  box-shadow: 8px 0 40px rgba(0,0,0,.7);
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.side-panel.collapsed { transform: translateX(-380px); }
 
-  .panel-toggle {
-    position: absolute;
-    right: -42px; top: 18px;
-    width: 42px; height: 42px;
-    background: rgba(45,30,15,0.92);
-    border: 2px solid #8b7355;
-    border-left: none;
-    border-radius: 0 8px 8px 0;
-    color: #d4b896;
-    font-size: 20px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-    z-index: 10;
-  }
-  .panel-toggle:hover { background: rgba(62,47,28,0.95); }
+/* 面板内纹理 */
+.side-panel::before {
+  content: ''; position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+  background:
+    repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139,115,85,0.02) 2px, rgba(139,115,85,0.02) 4px);
+}
 
-  /* 面板头部 */
-  .panel-header {
-    padding: 26px 28px 16px;
-    border-bottom: 2px solid #8b7355;
-    position: relative;
-  }
-  .panel-header::after {
-    content: '';
-    position: absolute;
-    bottom: -6px; left: 28px; right: 28px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #c4a265, transparent);
-  }
-  .panel-header h1 {
-    font-family: 'Cinzel', 'Noto Serif SC', serif;
-    font-size: 26px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    color: #d4b896;
-    text-align: center;
-    text-shadow: 0 2px 8px rgba(0,0,0,.5);
-    line-height: 1.4;
-  }
-  .panel-header .subtitle {
-    display: block;
-    font-family: 'Noto Serif SC', serif;
-    font-size: 13px;
-    letter-spacing: 4px;
-    color: #b8976e;
-    margin-top: 4px;
-  }
-  .panel-header .nautical-divider {
-    display: flex; align-items: center; gap: 10px;
-    margin-top: 14px;
-    color: #8b7355;
-    font-size: 14px;
-  }
-  .nautical-divider .line {
-    flex: 1; height: 1px;
-    background: linear-gradient(90deg, transparent, #8b7355, transparent);
-  }
+.panel-toggle {
+  position: absolute; right: -44px; top: 20px;
+  width: 44px; height: 44px;
+  background: rgba(35,22,10,0.95);
+  border: 2px solid rgba(196,162,101,0.35);
+  border-left: none;
+  border-radius: 0 10px 10px 0;
+  color: #d4b896; font-size: 18px;
+  cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.25s; z-index: 10;
+}
+.panel-toggle:hover { background: rgba(62,47,28,0.97); color: #e8d5b0; }
 
-  /* 路线进度条 */
-  .route-progress {
-    padding: 14px 28px;
-    border-bottom: 1px solid rgba(139,115,85,0.4);
-    display: flex; align-items: center; gap: 10px;
-  }
-  .route-progress .dot { width: 10px; height: 10px; border-radius: 50%; background: #c4a265; flex-shrink: 0; }
-  .route-progress .bar {
-    flex: 1; height: 3px;
-    background: linear-gradient(90deg, #c4a265, #8b7355);
-    border-radius: 2px;
-  }
-  .route-progress span {
-    font-size: 11px; color: #b8976e; white-space: nowrap;
-    letter-spacing: 1px;
-  }
+/* 面板头部 */
+.panel-header { padding: 28px 28px 18px; position: relative; z-index: 1; }
+.panel-header .emblem {
+  display: block; text-align: center; font-size: 36px;
+  margin-bottom: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,.5));
+}
+.panel-header h1 {
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
+  font-size: 24px; font-weight: 700;
+  letter-spacing: 4px; color: #d4b896;
+  text-align: center; text-shadow: 0 2px 8px rgba(0,0,0,.6);
+  line-height: 1.5;
+}
+.panel-header .subtitle {
+  display: block;
+  font-family: 'Noto Serif SC', serif;
+  font-size: 12px; letter-spacing: 5px;
+  color: #a08060; margin-top: 2px;
+}
 
-  /* 地点列表 */
-  .location-list {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px 0;
-  }
-  .location-list::-webkit-scrollbar { width: 4px; }
-  .location-list::-webkit-scrollbar-track { background: rgba(0,0,0,.2); }
-  .location-list::-webkit-scrollbar-thumb { background: #8b7355; border-radius: 2px; }
+/* 绳索分隔线 */
+.rope-divider {
+  display: flex; align-items: center; gap: 12px;
+  margin: 16px 0 0;
+  color: #8b7355; font-size: 13px; z-index: 1; position: relative;
+}
+.rope-divider .rline {
+  flex: 1; height: 2px;
+  background: repeating-linear-gradient(90deg,
+    #8b7355 0px, #8b7355 4px,
+    transparent 4px, transparent 8px
+  );
+}
 
-  .loc-item {
-    display: flex; align-items: flex-start; gap: 14px;
-    padding: 14px 28px;
-    cursor: pointer;
-    transition: all 0.25s;
-    border-left: 3px solid transparent;
-    position: relative;
-  }
-  .loc-item:hover { background: rgba(196,162,101,0.1); }
-  .loc-item.active {
-    background: rgba(196,162,101,0.15);
-    border-left-color: #c4a265;
-  }
-  .loc-item .marker-num {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5a3e28, #3e2f1c);
-    border: 2px solid #8b7355;
-    color: #d4b896;
-    font-family: 'Cinzel', serif;
-    font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .loc-item.active .marker-num {
-    background: linear-gradient(135deg, #8b6914, #5a3e28);
-    border-color: #c4a265;
-  }
-  .loc-item .loc-info h3 {
-    font-size: 15px; font-weight: 600; color: #e8d5b0;
-    margin-bottom: 3px; letter-spacing: 1px;
-  }
-  .loc-item .loc-info .loc-era {
-    font-size: 11px; color: #b8976e; letter-spacing: 1px;
-  }
-  .loc-item .loc-info .loc-desc {
-    font-size: 12px; color: #a89070; margin-top: 4px; line-height: 1.5;
-  }
+/* 总览信息条 */
+.info-strip {
+  margin: 12px 28px 0; padding: 10px 16px;
+  background: rgba(196,162,101,0.06);
+  border: 1px solid rgba(139,115,85,0.25);
+  border-radius: 6px;
+  display: flex; justify-content: space-around;
+  text-align: center; z-index: 1; position: relative;
+}
+.info-strip .is-item .is-num {
+  font-family: 'Cinzel', serif;
+  font-size: 22px; color: #c4a265; font-weight: 700;
+}
+.info-strip .is-item .is-label {
+  font-size: 10px; color: #8b7355; letter-spacing: 1px;
+}
 
-  /* 底部图例 */
-  .panel-footer {
-    padding: 16px 28px;
-    border-top: 1px solid rgba(139,115,85,0.4);
-    font-size: 11px;
-    color: #8b7355;
-    letter-spacing: 1px;
-    text-align: center;
-    line-height: 1.6;
-  }
-  .panel-footer .ship-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+/* 地点列表 */
+.location-list {
+  flex: 1; overflow-y: auto; padding: 10px 0;
+  position: relative; z-index: 1;
+}
+.location-list::-webkit-scrollbar { width: 4px; }
+.location-list::-webkit-scrollbar-track { background: rgba(0,0,0,.3); }
+.location-list::-webkit-scrollbar-thumb { background: #8b7355; border-radius: 2px; }
 
-  /* ---- 地图弹窗 ---- */
-  .leaflet-popup-content-wrapper {
-    background: rgba(45,30,15,0.94) !important;
-    color: #e8d5b0 !important;
-    border: 2px solid #8b7355 !important;
-    border-radius: 8px !important;
-    box-shadow: 0 8px 24px rgba(0,0,0,.6) !important;
-  }
-  .leaflet-popup-tip { background: rgba(45,30,15,0.94) !important; }
-  .leaflet-popup-content { font-family: 'Noto Serif SC', serif !important; margin: 12px 16px !important; }
-  .leaflet-popup-content h3 { font-size: 16px; margin: 0 0 4px; color: #d4b896; }
-  .leaflet-popup-content p { font-size: 12px; margin: 4px 0; color: #b8976e; }
+.loc-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 15px 24px; margin: 2px 12px;
+  cursor: pointer; border-radius: 8px;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  position: relative;
+}
+.loc-item:hover {
+  background: rgba(196,162,101,0.08);
+  border-color: rgba(139,115,85,0.2);
+}
+.loc-item.active {
+  background: rgba(196,162,101,0.15);
+  border-color: rgba(196,162,101,0.4);
+  box-shadow: 0 0 20px rgba(196,162,101,0.1);
+}
+.loc-item .marker-icon {
+  width: 40px; height: 40px; flex-shrink: 0;
+}
+.loc-item .loc-info h3 {
+  font-size: 14px; font-weight: 600; color: #e8d5b0;
+  margin-bottom: 2px; letter-spacing: 0.5px;
+}
+.loc-item.active .loc-info h3 { color: #c4a265; }
+.loc-item .loc-info .loc-meta {
+  font-size: 10px; color: #8b7355; letter-spacing: 1px;
+  display: flex; align-items: center; gap: 6px;
+}
+.loc-item .loc-info .loc-desc {
+  font-size: 11px; color: #a09070; margin-top: 5px; line-height: 1.6;
+}
 
-  /* ---- 航行动画路线 ---- */
-  .route-animated {
-    stroke-dasharray: 12 8;
-    animation: dashMove 1.5s linear infinite;
-  }
-  @keyframes dashMove {
-    to { stroke-dashoffset: -40; }
-  }
+/* 地点图标颜色点 */
+.loc-dot {
+  width: 10px; height: 10px; border-radius: 50%; display: inline-block;
+  box-shadow: 0 0 6px currentColor;
+}
 
-  /* ---- 响应式 ---- */
-  @media (max-width: 768px) {
-    .side-panel { width: 300px; }
-    .side-panel.collapsed { transform: translateX(-300px); }
-    .panel-header h1 { font-size: 20px; }
-    .loc-item { padding: 10px 20px; }
-    .compass-rose { width: 70px; height: 70px; top: 16px; right: 16px; }
-  }
+/* 底部 */
+.panel-footer {
+  padding: 14px 28px;
+  border-top: 1px solid rgba(139,115,85,0.25);
+  font-size: 10px; color: #6b5a42;
+  letter-spacing: 1px; text-align: center;
+  line-height: 1.8; position: relative; z-index: 1;
+}
+
+/* ===== 浮动图例 ===== */
+.float-legend {
+  position: fixed; bottom: 28px; right: 28px;
+  z-index: 1000; pointer-events: none;
+  background: rgba(35,22,10,0.85);
+  border: 1px solid rgba(196,162,101,0.3);
+  border-radius: 10px; padding: 12px 16px;
+  display: flex; gap: 14px;
+  backdrop-filter: blur(4px);
+}
+.float-legend .leg-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 10px; color: #b8976e;
+}
+.float-legend .leg-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+/* ===== 地图弹窗增强 ===== */
+.leaflet-popup-content-wrapper {
+  background: linear-gradient(160deg, rgba(40,25,12,0.97), rgba(30,18,5,0.97)) !important;
+  color: #e8d5b0 !important;
+  border: 2px solid rgba(196,162,101,0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.7), 0 0 0 1px rgba(139,115,85,0.2) inset !important;
+  min-width: 240px;
+}
+.leaflet-popup-tip {
+  background: rgba(40,25,12,0.97) !important;
+  border: 2px solid rgba(196,162,101,0.4) !important;
+  box-shadow: none !important;
+}
+.leaflet-popup-content {
+  font-family: 'Noto Serif SC', serif !important;
+  margin: 14px 18px !important; line-height: 1.6;
+}
+.leaflet-popup-content h3 {
+  font-family: 'Cinzel', 'Noto Serif SC', serif;
+  font-size: 17px; margin: 0 0 6px; color: #c4a265; letter-spacing: 1px;
+}
+.leaflet-popup-content .pop-era {
+  font-size: 11px; color: #8b7355; letter-spacing: 1px; margin-bottom: 8px;
+}
+.leaflet-popup-content .pop-desc {
+  font-size: 12px; color: #c4b896; line-height: 1.7;
+}
+.leaflet-popup-close-button { color: #8b7355 !important; font-size: 20px !important; }
+
+/* ===== 航线效果 ===== */
+.route-glow {
+  filter: drop-shadow(0 0 6px rgba(196,162,101,0.5));
+}
+
+@keyframes dashFlow {
+  to { stroke-dashoffset: -40; }
+}
+
+/* ===== 响应式 ===== */
+@media (max-width: 768px) {
+  .side-panel { width: 300px; }
+  .side-panel.collapsed { transform: translateX(-300px); }
+  .panel-header h1 { font-size: 20px; }
+  .loc-item { padding: 10px 16px; margin: 1px 8px; }
+  .compass-rose { width: 80px; height: 80px; top: 10px; right: 10px; }
+  .float-legend { bottom: 16px; right: 16px; gap: 8px; padding: 8px 12px; }
+}
 </style>
 </head>
 <body>
 
-<!-- 航海罗盘 -->
-<div class="compass-rose">
-  <svg viewBox="0 0 120 120">
-    <defs>
-      <radialGradient id="compGrad" cx="50%" cy="45%">
-        <stop offset="0%" stop-color="#d4b896"/>
-        <stop offset="70%" stop-color="#c4a265"/>
-        <stop offset="100%" stop-color="#8b6914"/>
-      </radialGradient>
-    </defs>
-    <circle cx="60" cy="60" r="56" fill="none" stroke="url(#compGrad)" stroke-width="2"/>
-    <circle cx="60" cy="60" r="50" fill="none" stroke="#c4a265" stroke-width="0.8" opacity="0.5"/>
-    <!-- 八个方位 -->
-    <g fill="#d4b896" font-family="Cinzel,serif" font-size="11" text-anchor="middle">
-      <text x="60" y="16" font-size="13" font-weight="bold" fill="#e8d5b0">N</text>
-      <text x="60" y="110" opacity="0.6">S</text>
-      <text x="110" y="64" opacity="0.6">E</text>
-      <text x="10" y="64" opacity="0.6">W</text>
-    </g>
-    <!-- NE/NW/SE/SW 小标记 -->
-    <g fill="#c4a265" font-family="Cinzel,serif" font-size="7" text-anchor="middle" opacity="0.5">
-      <text x="97" y="25">NE</text>
-      <text x="23" y="25">NW</text>
-      <text x="97" y="103">SE</text>
-      <text x="23" y="103">SW</text>
-    </g>
-    <!-- 指针 -->
-    <polygon points="60,10 55,55 60,45 65,55" fill="#e8d5b0" opacity="0.9"/>
-    <polygon points="60,110 55,65 60,75 65,65" fill="#8b6914" opacity="0.5"/>
-    <circle cx="60" cy="60" r="6" fill="#3e2f1c" stroke="#c4a265" stroke-width="1.5"/>
-  </svg>
-</div>
+<!-- 噪声纹理 -->
+<div class="noise-layer"></div>
 
 <!-- 地图 -->
 <div id="map"></div>
+
+<!-- 羊皮纸叠加 -->
 <div class="parchment-overlay"></div>
+
+<!-- 地图边框 -->
+<div class="map-border"></div>
+
+<!-- 边框四角装饰 -->
+<div class="corner-decor corner-tl">
+  <svg viewBox="0 0 60 60"><path d="M0,50 Q0,0 50,0" fill="none" stroke="#c4a265" stroke-width="1.5" opacity="0.6"/><path d="M0,40 Q0,10 40,0" fill="none" stroke="#c4a265" stroke-width="0.8" opacity="0.3"/><circle cx="4" cy="4" r="2.5" fill="#c4a265" opacity="0.7"/></svg>
+</div>
+<div class="corner-decor corner-tr">
+  <svg viewBox="0 0 60 60"><path d="M0,50 Q0,0 50,0" fill="none" stroke="#c4a265" stroke-width="1.5" opacity="0.6"/><path d="M0,40 Q0,10 40,0" fill="none" stroke="#c4a265" stroke-width="0.8" opacity="0.3"/><circle cx="4" cy="4" r="2.5" fill="#c4a265" opacity="0.7"/></svg>
+</div>
+<div class="corner-decor corner-bl">
+  <svg viewBox="0 0 60 60"><path d="M0,50 Q0,0 50,0" fill="none" stroke="#c4a265" stroke-width="1.5" opacity="0.6"/><path d="M0,40 Q0,10 40,0" fill="none" stroke="#c4a265" stroke-width="0.8" opacity="0.3"/><circle cx="4" cy="4" r="2.5" fill="#c4a265" opacity="0.7"/></svg>
+</div>
+<div class="corner-decor corner-br">
+  <svg viewBox="0 0 60 60"><path d="M0,50 Q0,0 50,0" fill="none" stroke="#c4a265" stroke-width="1.5" opacity="0.6"/><path d="M0,40 Q0,10 40,0" fill="none" stroke="#c4a265" stroke-width="0.8" opacity="0.3"/><circle cx="4" cy="4" r="2.5" fill="#c4a265" opacity="0.7"/></svg>
+</div>
+
+<!-- 航海罗盘 -->
+<div class="compass-rose">
+  <svg viewBox="0 0 130 130">
+    <defs>
+      <radialGradient id="cg" cx="50%" cy="45%">
+        <stop offset="0%" stop-color="#e8d5b0"/>
+        <stop offset="50%" stop-color="#c4a265"/>
+        <stop offset="100%" stop-color="#6b5010"/>
+      </radialGradient>
+    </defs>
+    <!-- 外环 -->
+    <circle cx="65" cy="65" r="60" fill="none" stroke="url(#cg)" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="65" cy="65" r="56" fill="none" stroke="#c4a265" stroke-width="0.5" opacity="0.4"/>
+    <!-- 刻度线 -->
+    <g stroke="#c4a265" stroke-width="0.6" opacity="0.35">
+      <line x1="65" y1="8" x2="65" y2="16"/>
+      <line x1="65" y1="114" x2="65" y2="122"/>
+      <line x1="8" y1="65" x2="16" y2="65"/>
+      <line x1="114" y1="65" x2="122" y2="65"/>
+      <line x1="25" y1="24" x2="31" y2="30"/>
+      <line x1="99" y1="24" x2="105" y2="30"/>
+      <line x1="25" y1="106" x2="31" y2="100"/>
+      <line x1="99" y1="106" x2="105" y2="100"/>
+    </g>
+    <!-- 方位字母 -->
+    <g fill="#d4b896" font-family="Cinzel,serif" font-size="12" text-anchor="middle">
+      <text x="65" y="20" font-size="15" font-weight="bold" fill="#e8d5b0">N</text>
+      <text x="65" y="118" opacity="0.5">S</text>
+      <text x="116" y="70" opacity="0.5">E</text>
+      <text x="14" y="70" opacity="0.5">W</text>
+    </g>
+    <!-- 指针（动起来的） -->
+    <g class="compass-needle" style="transform-origin:65px 65px;animation:needleSway 8s ease-in-out infinite;">
+      <polygon points="65,12 58,60 65,48 72,60" fill="#e8d5b0" opacity="0.9"/>
+      <polygon points="65,118 58,70 65,82 72,70" fill="#7a5a30" opacity="0.4"/>
+    </g>
+    <circle cx="65" cy="65" r="7" fill="#2a1508" stroke="#c4a265" stroke-width="1.5"/>
+    <circle cx="65" cy="65" r="2" fill="#e8d5b0"/>
+  </svg>
+</div>
+<style>@keyframes needleSway{0%,100%{transform:rotate(0deg)}30%{transform:rotate(2deg)}70%{transform:rotate(-1.5deg)}}</style>
 
 <!-- 侧边面板 -->
 <div class="side-panel" id="sidePanel">
   <button class="panel-toggle" id="panelToggle" title="收起/展开">◀</button>
 
   <div class="panel-header">
+    <span class="emblem">⚓</span>
     <h1>闽 南 侨 批 地 图<span class="subtitle">· QIAOPI MAP ·</span></h1>
-    <div class="nautical-divider">
-      <span class="line"></span><span>⚓</span><span class="line"></span>
+    <div class="rope-divider">
+      <span class="rline"></span><span>⛵</span><span class="rline"></span>
     </div>
   </div>
 
-  <div class="route-progress">
-    <div class="dot"></div><div class="bar"></div>
-    <span>海上丝绸之路 · 侨批记忆</span>
+  <div class="info-strip">
+    <div class="is-item">
+      <div class="is-num">9</div><div class="is-label">历史站点</div>
+    </div>
+    <div class="is-item">
+      <div class="is-num">3</div><div class="is-label">闽南城市</div>
+    </div>
+    <div class="is-item">
+      <div class="is-num">1880</div><div class="is-label">始于年份</div>
+    </div>
   </div>
 
   <div class="location-list" id="locationList"></div>
 
   <div class="panel-footer">
-    <span class="ship-icon">⛵</span>
-    天一总局 → 鼓浪屿 → 厦门 → 晋江<br>→ 石狮 → 泉州 → 南安<br>
-    <span style="color:#b8976e">漳州 · 厦门 · 泉州</span>
+    天一总局 → 鼓浪屿 · 厦门 → 晋江 · 石狮 → 泉州古城 → 南安<br>
+    <span style="color:#8b7355">漳州 · 厦门 · 泉州 — 海上丝绸之路记忆</span>
   </div>
+</div>
+
+<!-- 浮动图例 -->
+<div class="float-legend" id="floatLegend">
+  <div class="leg-item"><span class="leg-dot" style="background:#5a8a9a;box-shadow:0 0 6px #5a8a9a"></span>侨批局</div>
+  <div class="leg-item"><span class="leg-dot" style="background:#8b6914;box-shadow:0 0 6px #8b6914"></span>博物馆</div>
+  <div class="leg-item"><span class="leg-dot" style="background:#b87333;box-shadow:0 0 6px #b87333"></span>展厅</div>
+  <div class="leg-item"><span class="leg-dot" style="background:#6b8e5a;box-shadow:0 0 6px #6b8e5a"></span>村落/民居</div>
+  <div class="leg-item"><span class="leg-dot" style="background:#7a5a4a;box-shadow:0 0 6px #7a5a4a"></span>古城</div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ---- 地点数据 ----
+// ==================== 地点数据 ====================
 const locations = [
   {
-    id: 1,
-    name: '天一总局',
-    fullName: '天一信局总办事处',
+    id: 1, name: '天一总局', fullName: '天一信局总办事处',
     lat: 24.505, lng: 117.925,
-    city: '漳州',
-    area: '龙海角美流传村',
+    city: '漳州', area: '龙海角美流传村',
     era: '清光绪六年（1880年）',
     desc: '中国最早的侨批局，由郭有品创办。鼎盛时期在东南亚设有20多家分支机构，年处理侨汇超千万银元，被誉为"闽南侨批业鼻祖"。',
-    icon: 'anchor'
+    icon: 'anchor', color: '#5a8a9a'
   },
   {
-    id: 2,
-    name: '鼓浪屿华侨博物馆',
-    fullName: '厦门华侨博物院',
+    id: 2, name: '鼓浪屿华侨博物馆', fullName: '厦门华侨博物院',
     lat: 24.447, lng: 118.068,
-    city: '厦门',
-    area: '鼓浪屿',
+    city: '厦门', area: '鼓浪屿',
     era: '1959年建馆',
     desc: '中国唯一的华侨历史专题博物馆，由陈嘉庚先生倡办。馆藏大量侨批实物、侨乡文物，全面展示华侨"下南洋"的艰辛历程与家国情怀。',
-    icon: 'museum'
+    icon: 'museum', color: '#8b6914'
   },
   {
-    id: 3,
-    name: '厦门侨批展厅',
-    fullName: '厦门市侨批文化展厅',
+    id: 3, name: '厦门侨批展厅', fullName: '厦门市侨批文化展厅',
     lat: 24.455, lng: 118.087,
-    city: '厦门',
-    area: '思明区中山路',
+    city: '厦门', area: '思明区中山路',
     era: '专题展厅',
     desc: '集中展示闽南侨批的历史变迁，还原批局经营场景，藏有大量"水客"往来的珍贵信函，是了解侨批文化的重要窗口。',
-    icon: 'letter'
+    icon: 'letter', color: '#b87333'
   },
   {
-    id: 4,
-    name: '梧林传统村落',
-    fullName: '晋江梧林古村落',
+    id: 4, name: '梧林传统村落', fullName: '晋江梧林古村落',
     lat: 24.775, lng: 118.585,
-    city: '泉州',
-    area: '晋江市新塘街道',
+    city: '泉州', area: '晋江市新塘街道',
     era: '明清至今',
     desc: '闽南著名侨乡，保存完好的闽南古厝、番仔楼建筑群。一砖一瓦间尽是华侨下南洋、寄侨批、建家宅的动人故事。',
-    icon: 'village'
+    icon: 'village', color: '#6b8e5a'
   },
   {
-    id: 5,
-    name: '晋江侨批馆',
-    fullName: '晋江市侨批文化展示馆',
+    id: 5, name: '晋江侨批馆', fullName: '晋江市侨批文化展示馆',
     lat: 24.815, lng: 118.572,
-    city: '泉州',
-    area: '晋江市',
+    city: '泉州', area: '晋江市',
     era: '文化展馆',
     desc: '系统展示晋江作为全国著名侨乡的侨批文化，收藏大量侨批原件与批局经营史料，见证"十户九侨"的深厚侨乡底蕴。',
-    icon: 'letter'
+    icon: 'letter', color: '#b87333'
   },
   {
-    id: 6,
-    name: '永宁古卫城',
-    fullName: '石狮永宁古卫城',
+    id: 6, name: '永宁古卫城', fullName: '石狮永宁古卫城',
     lat: 24.682, lng: 118.725,
-    city: '泉州',
-    area: '石狮市永宁镇',
+    city: '泉州', area: '石狮市永宁镇',
     era: '明洪武二十年（1387年）',
     desc: '东南沿海重要海防古城，也是闽南人"下南洋"的重要出海口。城内保留大量侨汇建造的番仔楼与侨批故事。',
-    icon: 'fortress'
+    icon: 'fortress', color: '#7a5a4a'
   },
   {
-    id: 7,
-    name: '王顺兴信局旧址',
-    fullName: '王顺兴侨批信局',
+    id: 7, name: '王顺兴信局旧址', fullName: '王顺兴侨批信局',
     lat: 24.908, lng: 118.590,
-    city: '泉州',
-    area: '古城区域',
+    city: '泉州', area: '古城区域',
     era: '清末民初',
     desc: '泉州古城内保存最完整的侨批信局旧址，见证了泉州作为海上丝绸之路起点在侨批网络中的枢纽地位。',
-    icon: 'anchor'
+    icon: 'anchor', color: '#5a8a9a'
   },
   {
-    id: 8,
-    name: '泉州侨批馆',
-    fullName: '泉州市侨批文化馆',
+    id: 8, name: '泉州侨批馆', fullName: '泉州市侨批文化馆',
     lat: 24.912, lng: 118.587,
-    city: '泉州',
-    area: '泉州古城',
+    city: '泉州', area: '泉州古城',
     era: '文化展馆',
     desc: '位于泉州古城区，集中展示泉州侨批文化的历史脉络。泉州是海上丝绸之路起点，侨批文化在此与海丝文化深度交融。',
-    icon: 'museum'
+    icon: 'museum', color: '#8b6914'
   },
   {
-    id: 9,
-    name: '蔡氏古民居',
-    fullName: '南安蔡氏古民居建筑群',
+    id: 9, name: '蔡氏古民居', fullName: '南安蔡氏古民居建筑群',
     lat: 24.952, lng: 118.455,
-    city: '泉州',
-    area: '南安市官桥镇',
+    city: '泉州', area: '南安市官桥镇',
     era: '清同治至宣统年间',
     desc: '闽南规模最大的华侨古民居群，由旅菲华侨蔡启昌、蔡资深父子兴建。十余座大厝连片而立，堪称侨批财富化作故土家园的宏伟见证。',
-    icon: 'village'
+    icon: 'village', color: '#6b8e5a'
   }
 ];
 
-// ---- 自定义 SVG 图标 ----
-function createIcon(type, num) {
-  const colors = {
-    anchor:   { fill: '#5a8a9a', stroke: '#d4b896' },
-    museum:   { fill: '#8b6914', stroke: '#d4b896' },
-    letter:   { fill: '#b87333', stroke: '#d4b896' },
-    village:  { fill: '#6b8e5a', stroke: '#d4b896' },
-    fortress: { fill: '#7a5a4a', stroke: '#d4b896' }
-  };
-  const c = colors[type] || colors.anchor;
+// ==================== 地点专属SVG图标 ====================
+const iconSVGs = {
+  anchor:   '<path d="M20 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0zm8-8v-2m0 18v-2m-8-8h-2m18 0h-2" stroke="COLOR" stroke-width="2" fill="none"/><circle cx="20" cy="12" r="5" fill="COLOR" opacity="0.3"/><circle cx="20" cy="12" r="2" fill="COLOR"/><line x1="20" y1="2" x2="20" y2="4" stroke="COLOR2" stroke-width="2"/><circle cx="20" cy="1" r="1.5" fill="none" stroke="COLOR2" stroke-width="1.5"/>',
+  museum:  '<rect x="8" y="14" width="24" height="8" rx="1" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.25"/><rect x="14" y="10" width="12" height="4" rx="1" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.25"/><polygon points="20,4 12,10 28,10" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.3"/><rect x="11" y="16" width="5" height="6" rx="0.5" fill="COLOR2"/><rect x="18" y="16" width="5" height="6" rx="0.5" fill="COLOR2"/>',
+  letter:  '<rect x="7" y="4" width="26" height="34" rx="3" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.15"/><polyline points="8,6 20,20 32,6" stroke="COLOR" stroke-width="2" fill="none"/><circle cx="20" cy="20" r="5" fill="COLOR" opacity="0.3"/><circle cx="20" cy="20" r="2.5" fill="COLOR"/>',
+  village: '<path d="M6 36 L6 20 L12 14 L18 20 L18 36" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.2"/><path d="M18 36 L18 20 L24 14 L30 20 L30 36" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.2"/><rect x="10" y="24" width="5" height="12" rx="0.5" fill="COLOR2"/><rect x="22" y="24" width="5" height="12" rx="0.5" fill="COLOR2"/><line x1="6" y1="36" x2="34" y2="36" stroke="COLOR2" stroke-width="1.5"/>',
+  fortress:'<path d="M8 38 L8 18 L16 6 L24 18 L24 38" stroke="COLOR" stroke-width="2" fill="COLOR" opacity="0.2"/><rect x="11" y="14" width="3" height="6" rx="0.5" fill="COLOR2"/><rect x="18" y="14" width="3" height="6" rx="0.5" fill="COLOR2"/><rect x="10" y="24" width="5" height="14" rx="0.5" fill="COLOR2"/><rect x="17" y="24" width="5" height="14" rx="0.5" fill="COLOR2"/><rect x="24" y="24" width="4" height="14" rx="0.5" fill="COLOR2"/><line x1="16" y1="6" x2="16" y2="2" stroke="COLOR2" stroke-width="1.5"/><circle cx="16" cy="1" r="1.5" fill="none" stroke="COLOR2" stroke-width="1.5"/>'
+};
 
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 52" width="40" height="52">
-      <defs>
-        <filter id="shadow"><feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-opacity="0.4"/></filter>
-      </defs>
-      <g filter="url(#shadow)">
-        <!-- 锚/标记底座 -->
-        <circle cx="20" cy="28" r="16" fill="${c.fill}" stroke="${c.stroke}" stroke-width="2.5"/>
-        <circle cx="20" cy="28" r="10" fill="none" stroke="${c.stroke}" stroke-width="0.8" opacity="0.5"/>
-        <!-- 数字 -->
-        <text x="20" y="32" text-anchor="middle" fill="#e8d5b0"
-              font-family="Cinzel,serif" font-size="15" font-weight="bold">${num}</text>
-        <!-- 上方绳索/锚杆 -->
-        <line x1="20" y1="8" x2="20" y2="12" stroke="${c.stroke}" stroke-width="2"/>
-        <circle cx="20" cy="6" r="3" fill="none" stroke="${c.stroke}" stroke-width="2"/>
-      </g>
-    </svg>`;
+function createMarkerSVG(iconType, num, color) {
+  const svgContent = iconSVGs[iconType] || iconSVGs.anchor;
+  const iconPart = svgContent.replace(/COLOR2/g, '#e8d5b0').replace(/COLOR/g, color);
 
-  const encoded = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
-  return L.icon({
-    iconUrl: encoded,
-    iconSize: [40, 52],
-    iconAnchor: [20, 44],
-    popupAnchor: [0, -42]
-  });
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 48" width="44" height="54">
+    <defs>
+      <filter id="glow"><feGaussianBlur stdDeviation="1.2" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="sh"><feDropShadow dx="0" dy="1.5" stdDeviation="1.5" flood-color="#000" flood-opacity="0.45"/></filter>
+    </defs>
+    <g filter="url(#sh)">
+      <!-- 锚杆 -->
+      <line x1="20" y1="0" x2="20" y2="7" stroke="#e8d5b0" stroke-width="2"/>
+      <circle cx="20" cy="3" r="2" fill="#e8d5b0"/>
+      <!-- 主体图标 -->
+      ${iconPart}
+      <!-- 数字标签 -->
+      <circle cx="20" cy="40" r="10" fill="${color}" stroke="#e8d5b0" stroke-width="1.5"/>
+      <text x="20" y="44" text-anchor="middle" fill="#fff" font-family="Cinzel,serif" font-size="12" font-weight="bold">${num}</text>
+    </g>
+  </svg>`;
+
+  return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
 }
 
-// ---- 初始化地图 ----
+function createSideIconSVG(iconType, color) {
+  const svgContent = iconSVGs[iconType] || iconSVGs.anchor;
+  const iconPart = svgContent.replace(/COLOR2/g, '#e8d5b0').replace(/COLOR/g, color);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 48" width="40" height="48">
+    ${iconPart}
+    <circle cx="20" cy="40" r="8" fill="${color}" stroke="#e8d5b0" stroke-width="1"/>
+  </svg>`;
+}
+
+// ==================== 初始化地图 ====================
 const map = L.map('map', {
   center: [24.7, 118.25],
   zoom: 10,
   minZoom: 9,
-  maxZoom: 16,
+  maxZoom: 17,
   zoomControl: false,
   attributionControl: false
 });
 
-// 使用柔色底图 + 羊皮纸滤镜
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
   maxZoom: 19
 }).addTo(map);
 
-// 右上角缩放控件（位置避开罗盘）
 L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-// ---- 绘制航线 ----
+// ==================== 绘制航线 ====================
 const routeCoords = locations.map(l => [l.lat, l.lng]);
-const routeLine = L.polyline(routeCoords, {
-  color: '#c4a265',
-  weight: 3,
-  dashArray: '14 8',
-  opacity: 0.8,
-  className: 'route-animated'
-}).addTo(map);
 
-// 航线外围虚线（航路带宽效果）
+// 航线主体
 L.polyline(routeCoords, {
-  color: '#8b7355',
-  weight: 1,
-  dashArray: '4 12',
-  opacity: 0.4
+  color: '#c4a265', weight: 3.5, dashArray: '14 8', opacity: 0.85,
+  className: 'route-glow'
 }).addTo(map);
 
-// 起始与终点标记
-const startIcon = L.divIcon({
-  className: '',
-  html: '<div style="background:linear-gradient(135deg,#c4a265,#8b6914);color:#3e2f1c;padding:4px 10px;border-radius:12px;font-family:Cinzel,serif;font-size:12px;font-weight:bold;border:2px solid #e8d5b0;white-space:nowrap;text-align:center;">⚓ 起点</div>',
-  iconSize: [0, 0],
-  iconAnchor: [-35, 12]
-});
-const endIcon = L.divIcon({
-  className: '',
-  html: '<div style="background:linear-gradient(135deg,#8b6914,#5a3e28);color:#e8d5b0;padding:4px 10px;border-radius:12px;font-family:Cinzel,serif;font-size:12px;font-weight:bold;border:2px solid #c4a265;white-space:nowrap;text-align:center;">🏁 终点</div>',
-  iconSize: [0, 0],
-  iconAnchor: [-35, 12]
-});
-L.marker([locations[0].lat, locations[0].lng], { icon: startIcon }).addTo(map);
-L.marker([locations[8].lat, locations[8].lng], { icon: endIcon }).addTo(map);
+// 航线外轨
+L.polyline(routeCoords, {
+  color: '#8b7355', weight: 1.2, dashArray: '4 12', opacity: 0.35
+}).addTo(map);
 
-// ---- 添加标记点 ----
+// 航线内轨
+L.polyline(routeCoords, {
+  color: '#e8d5b0', weight: 0.8, dashArray: '2 18', opacity: 0.25
+}).addTo(map);
+
+// 起终点标签
+const lblStyle = 'background:rgba(30,16,5,0.85);color:#e8d5b0;padding:4px 12px;border-radius:14px;font-family:Cinzel,serif;font-size:11px;font-weight:bold;border:1.5px solid #c4a265;white-space:nowrap;backdrop-filter:blur(4px);';
+L.marker([locations[0].lat, locations[0].lng], {
+  icon: L.divIcon({ className: '', html: `<div style="${lblStyle}border-color:#e8d5b0;">⚓ 起点 · 天一总局</div>`, iconSize: [0,0], iconAnchor: [-60,14] })
+}).addTo(map);
+L.marker([locations[8].lat, locations[8].lng], {
+  icon: L.divIcon({ className: '', html: `<div style="${lblStyle}">🏁 终点 · 蔡氏古民居</div>`, iconSize: [0,0], iconAnchor: [-65,14] })
+}).addTo(map);
+
+// ==================== 添加标记点 ====================
 const markers = [];
 locations.forEach((loc, i) => {
-  const icon = createIcon(loc.icon, i + 1);
+  const iconUrl = createMarkerSVG(loc.icon, i + 1, loc.color);
+  const icon = L.icon({ iconUrl, iconSize: [44, 54], iconAnchor: [22, 48], popupAnchor: [0, -46] });
   const marker = L.marker([loc.lat, loc.lng], { icon })
     .bindPopup(`
       <h3>${loc.name}</h3>
-      <p style="color:#c4a265;font-size:11px;">${loc.city} · ${loc.area}</p>
-      <p style="font-size:11px;color:#8b7355;">${loc.era}</p>
-      <p style="line-height:1.6;">${loc.desc}</p>
+      <div class="pop-era">📍 ${loc.city} · ${loc.area} ｜ ${loc.era}</div>
+      <div class="pop-desc">${loc.desc}</div>
     `)
     .addTo(map);
   markers.push({ marker, loc, index: i });
 });
 
-// ---- 侧边栏地点列表 ----
+// ==================== 侧边栏列表 ====================
 const listEl = document.getElementById('locationList');
 locations.forEach((loc, i) => {
   const div = document.createElement('div');
   div.className = 'loc-item';
+  const sideIcon = createSideIconSVG(loc.icon, loc.color);
+  const encoded = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(sideIcon)));
   div.innerHTML = `
-    <div class="marker-num">${i + 1}</div>
+    <img class="marker-icon" src="${encoded}" alt="${loc.name}">
     <div class="loc-info">
-      <h3>${loc.name}</h3>
-      <div class="loc-era">${loc.city} · ${loc.area}</div>
-      <div class="loc-desc">${loc.desc.substring(0, 52)}…</div>
+      <h3><span class="loc-dot" style="color:${loc.color};background:${loc.color}"></span> ${loc.name}</h3>
+      <div class="loc-meta">📌 ${loc.city} · ${loc.area}</div>
+      <div class="loc-desc">${loc.desc.substring(0, 48)}…</div>
     </div>`;
   div.addEventListener('click', () => {
-    map.setView([loc.lat, loc.lng], 14, { animate: true });
-    markers[i].marker.openPopup();
+    map.flyTo([loc.lat, loc.lng], 14, { duration: 1.2 });
+    setTimeout(() => markers[i].marker.openPopup(), 800);
     setActiveItem(i);
   });
   listEl.appendChild(div);
 });
 
 function setActiveItem(idx) {
-  document.querySelectorAll('.loc-item').forEach((el, i) => {
-    el.classList.toggle('active', i === idx);
-  });
+  document.querySelectorAll('.loc-item').forEach((el, i) => el.classList.toggle('active', i === idx));
+  const items = listEl.children;
+  if (items[idx]) items[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
-// ---- 面板折叠 ----
+// ==================== 面板折叠 ====================
 const panel = document.getElementById('sidePanel');
 const toggle = document.getElementById('panelToggle');
 let panelOpen = true;
-
 toggle.addEventListener('click', () => {
   panelOpen = !panelOpen;
   panel.classList.toggle('collapsed', !panelOpen);
@@ -559,35 +641,169 @@ toggle.addEventListener('click', () => {
   setTimeout(() => map.invalidateSize(), 400);
 });
 
-// ---- 键盘导航 ----
-let currentIdx = 0;
+// ==================== 键盘导航 ====================
+let currentIdx = -1;
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
-    e.preventDefault();
-    currentIdx = Math.min(currentIdx + 1, locations.length - 1);
-  } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-    e.preventDefault();
-    currentIdx = Math.max(currentIdx - 1, 0);
-  } else return;
-
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); currentIdx = Math.min(currentIdx + 1, locations.length - 1); }
+  else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); currentIdx = Math.max(currentIdx - 1, 0); }
+  else return;
   const loc = locations[currentIdx];
-  map.setView([loc.lat, loc.lng], 14, { animate: true });
-  markers[currentIdx].marker.openPopup();
+  map.flyTo([loc.lat, loc.lng], 14, { duration: 0.8 });
+  setTimeout(() => markers[currentIdx].marker.openPopup(), 500);
   setActiveItem(currentIdx);
-
-  // 滚动列表可见
-  const items = listEl.children;
-  if (items[currentIdx]) items[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
 
-// ---- 响应式适配 ----
+// ==================== 航船动画 ====================
+const shipSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 36" width="48" height="36">
+  <defs>
+    <filter id="sglow"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.5"/></filter>
+  </defs>
+  <g filter="url(#sglow)">
+    <!-- 船体 -->
+    <path d="M2 26 L8 30 L40 30 L46 26 L44 24 L4 24 Z" fill="#5a3e28" stroke="#c4a265" stroke-width="1.2"/>
+    <!-- 船帆 -->
+    <polygon points="22,22 22,6 32,14" fill="#e8d5b0" stroke="#c4a265" stroke-width="0.8" opacity="0.85"/>
+    <polygon points="18,22 18,10 10,16" fill="#d4c4a0" stroke="#c4a265" stroke-width="0.8" opacity="0.7"/>
+    <!-- 桅杆 -->
+    <line x1="22" y1="22" x2="22" y2="4" stroke="#8b7355" stroke-width="1.5"/>
+    <line x1="18" y1="22" x2="18" y2="8" stroke="#8b7355" stroke-width="1.2"/>
+    <!-- 船头装饰 -->
+    <circle cx="4" cy="25" r="1.8" fill="#c4a265"/>
+    <!-- 旗帜 -->
+    <polygon points="22,4 22,0 28,3" fill="#8b6914" stroke="#e8d5b0" stroke-width="0.5"/>
+  </g>
+</svg>`;
+
+const shipIcon = L.icon({
+  iconUrl: 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(shipSVG))),
+  iconSize: [48, 36],
+  iconAnchor: [24, 30]
+});
+
+// 计算路径总长度和插值
+function getPathLength(coords) {
+  let total = 0;
+  for (let i = 1; i < coords.length; i++) {
+    const a = coords[i - 1], b = coords[i];
+    total += Math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
+  }
+  return total;
+}
+
+function interpolateAlongPath(coords, t) {
+  const totalLen = getPathLength(coords);
+  let targetDist = t * totalLen;
+  let accumulated = 0;
+
+  for (let i = 1; i < coords.length; i++) {
+    const a = coords[i - 1], b = coords[i];
+    const segLen = Math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
+    if (accumulated + segLen >= targetDist) {
+      const segT = (targetDist - accumulated) / segLen;
+      return [a[0] + (b[0] - a[0]) * segT, a[1] + (b[1] - a[1]) * segT];
+    }
+    accumulated += segLen;
+  }
+  return coords[coords.length - 1];
+}
+
+function getBearingAt(coords, t) {
+  const totalLen = getPathLength(coords);
+  let targetDist = t * totalLen;
+  let accumulated = 0;
+
+  for (let i = 1; i < coords.length; i++) {
+    const a = coords[i - 1], b = coords[i];
+    const segLen = Math.sqrt((b[0] - a[0]) ** 2 + (b[1] - a[1]) ** 2);
+    if (accumulated + segLen >= targetDist) {
+      const dy = b[0] - a[0], dx = b[1] - a[1];
+      return Math.atan2(dx, dy) * (180 / Math.PI);
+    }
+    accumulated += segLen;
+  }
+  return 0;
+}
+
+const shipMarker = L.marker([locations[0].lat, locations[0].lng], {
+  icon: shipIcon,
+  zIndexOffset: 1000
+}).addTo(map);
+
+// 尾迹粒子
+const wakeMarkers = [];
+for (let w = 0; w < 5; w++) {
+  const wakeIcon = L.divIcon({
+    className: '',
+    html: `<div style="width:${6-w}px;height:${6-w}px;border-radius:50%;background:rgba(196,162,101,${0.5-w*0.08});"></div>`,
+    iconSize: [6, 6], iconAnchor: [3, 3]
+  });
+  const wm = L.marker([0, 0], { icon: wakeIcon, interactive: false, zIndexOffset: 900 + w }).addTo(map);
+  wakeMarkers.push(wm);
+}
+
+let shipT = 0;
+let shipPaused = false;
+let pauseTimer = null;
+
+function animateShip(timestamp) {
+  if (!shipPaused) {
+    shipT += 0.0005;
+    if (shipT > 1) shipT = 0;
+
+    const pos = interpolateAlongPath(routeCoords, shipT);
+    const bearing = getBearingAt(routeCoords, shipT);
+
+    shipMarker.setLatLng(pos);
+    const shipEl = shipMarker.getElement();
+    if (shipEl) {
+      const iconEl = shipEl.querySelector('img') || shipEl;
+      iconEl.style.transform = `rotate(${bearing}deg)`;
+      iconEl.style.transformOrigin = 'center center';
+      iconEl.style.transition = 'transform 0.3s ease';
+    }
+
+    // 更新尾迹
+    for (let w = 0; w < wakeMarkers.length; w++) {
+      const wt = Math.max(0, shipT - (w + 1) * 0.004);
+      const wp = interpolateAlongPath(routeCoords, wt);
+      wakeMarkers[w].setLatLng(wp);
+    }
+
+    // 在站点附近暂停
+    for (let i = 0; i < locations.length; i++) {
+      const stationT = i / (locations.length - 1);
+      if (Math.abs(shipT - stationT) < 0.003 && Math.abs(shipT - stationT) > 0.0001) {
+        shipPaused = true;
+        setActiveItem(i);
+        markers[i].marker.openPopup();
+        clearTimeout(pauseTimer);
+        pauseTimer = setTimeout(() => { shipPaused = false; markers[i].marker.closePopup(); }, 2200);
+        break;
+      }
+    }
+  }
+
+  requestAnimationFrame(animateShip);
+}
+requestAnimationFrame(animateShip);
+
+// ==================== 响应式 ====================
 window.addEventListener('resize', () => map.invalidateSize());
 
-// ---- 初始自适应视图 ----
+// ==================== 初始视图 ====================
 const bounds = L.latLngBounds(routeCoords);
-map.fitBounds(bounds.pad(0.15));
+map.fitBounds(bounds.pad(0.12));
 
-console.log('⚓ 闽南侨批地图已就绪 · 9个站点 · 跨越漳厦泉');
+// ==================== 双击罗盘回到全览 ====================
+document.querySelector('.compass-rose').style.pointerEvents = 'auto';
+document.querySelector('.compass-rose').addEventListener('click', () => {
+  map.flyToBounds(bounds.pad(0.12), { duration: 1 });
+});
+document.querySelector('.compass-rose').style.cursor = 'pointer';
+document.querySelector('.compass-rose').title = '点击回到全览视图';
+
+console.log('⚓ 闽南侨批地图 v2 · 9站点 · 航船巡游中');
 </script>
 </body>
 </html>
