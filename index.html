@@ -835,11 +835,13 @@ const markers = [];
 locations.forEach((loc, i) => {
   const iconUrl = createMarkerSVG(loc.icon, i + 1, loc.color);
   const icon = L.icon({ iconUrl, iconSize: [44, 54], iconAnchor: [22, 48], popupAnchor: [0, -46] });
+  const popImg = loc.photo ? `<img src="${loc.photo}" style="width:100%;max-height:140px;object-fit:cover;border-radius:6px;margin-bottom:8px;border:1px solid rgba(196,162,101,0.3);" onerror="this.style.display='none'">` : '';
   const marker = L.marker([loc.lat, loc.lng], { icon })
     .bindPopup(`
+      ${popImg}
       <h3>${loc.name}</h3>
       <div class="pop-era">📍 ${loc.city} · ${loc.area} ｜ ${loc.era}</div>
-      <div class="pop-desc">${loc.desc.substring(0, 150)}…<br><small style="color:#c4a265">点击左侧列表查看完整介绍 →</small></div>
+      <div class="pop-desc">${loc.desc.substring(0, 120)}…<br><small style="color:#c4a265">点击左侧列表查看完整介绍 →</small></div>
     `)
     .addTo(map);
   markers.push({ marker, loc, index: i });
