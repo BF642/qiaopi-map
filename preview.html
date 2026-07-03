@@ -1,0 +1,1243 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ä¾¨æ¹ææ¸¸è·¯çº¿å¾é¢è§</title>
+  <link rel="stylesheet" href="./assets/vendor/leaflet/leaflet.css">
+  <style>
+    :root {
+      color: #18352f;
+      background: #f5f4ef;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: #f5f4ef;
+      color: #18352f;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, #0f4f43 0%, #17695a 56%, #b9603f 100%);
+      color: #fff;
+    }
+
+    .brand-kicker {
+      display: block;
+      margin-bottom: 4px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 13px;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .icon-button {
+      display: inline-flex;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(420px, 1.25fr) minmax(360px, 0.75fr);
+      height: calc(100vh - 86px);
+      min-height: 640px;
+      overflow: hidden;
+    }
+
+    .map-panel {
+      position: relative;
+      height: 100%;
+      min-height: 640px;
+      overflow: hidden;
+      background: #dfe8df;
+    }
+
+    .map-cover {
+      display: none;
+    }
+
+    .leaflet-map,
+    .fallback-map,
+    .fallback-map svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .leaflet-map {
+      display: none;
+      z-index: 1;
+      background: #dfe8df;
+    }
+
+    .fallback-map {
+      z-index: 0;
+      background:
+        linear-gradient(90deg, rgba(112, 139, 126, 0.14), transparent 1px),
+        linear-gradient(0deg, rgba(112, 139, 126, 0.12), transparent 1px),
+        #e9eee5;
+      background-size: 42px 42px;
+    }
+
+    .map-panel.leaflet-ready .fallback-map,
+    .map-panel.leaflet-ready .route-svg,
+    .map-panel.leaflet-ready #pins {
+      display: none;
+    }
+
+    .map-panel.leaflet-ready .leaflet-map {
+      display: block;
+    }
+
+    .map-land {
+      fill: #edf1e8;
+    }
+
+    .map-park {
+      fill: #cfe4cf;
+      opacity: 0.9;
+    }
+
+    .map-water {
+      fill: #bed8de;
+    }
+
+    .map-water-line {
+      fill: none;
+      stroke: #90c0cb;
+      stroke-linecap: round;
+      stroke-width: 5.2;
+    }
+
+    .map-road-major,
+    .map-road-minor {
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .map-road-major {
+      stroke: #f3c971;
+      stroke-width: 2.2;
+    }
+
+    .map-road-major.halo {
+      stroke: #fff7df;
+      stroke-width: 4.8;
+    }
+
+    .map-road-minor {
+      stroke: #fffdf8;
+      stroke-width: 1.25;
+    }
+
+    .map-road-minor.halo {
+      stroke: #d7ded4;
+      stroke-width: 2.8;
+    }
+
+    .map-district,
+    .map-place,
+    .map-road-name,
+    .map-water-name {
+      font-family: inherit;
+      letter-spacing: 0;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.82);
+      stroke-width: 3px;
+    }
+
+    .map-district {
+      fill: #6c7973;
+      font-size: 2.8px;
+      font-weight: 760;
+    }
+
+    .map-place {
+      fill: #48625b;
+      font-size: 2.25px;
+      font-weight: 720;
+    }
+
+    .map-road-name {
+      fill: #9a814d;
+      font-size: 1.8px;
+      font-weight: 700;
+    }
+
+    .map-water-name {
+      fill: #4f8998;
+      font-size: 2.1px;
+      font-weight: 720;
+    }
+
+    .fallback-label {
+      position: absolute;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      color: #51635d;
+      font-size: 12px;
+      font-weight: 760;
+      line-height: 1.15;
+      white-space: nowrap;
+      text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9);
+      pointer-events: none;
+    }
+
+    .fallback-label.place {
+      color: #385d55;
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .fallback-label.road {
+      background: rgba(255, 255, 255, 0.38);
+      color: #917942;
+      font-size: 11px;
+    }
+
+    .fallback-label.water {
+      background: rgba(255, 255, 255, 0.32);
+      color: #4f8998;
+      font-size: 12px;
+    }
+
+    .map-scrim {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        linear-gradient(180deg, rgba(245, 244, 239, 0.1) 0%, rgba(245, 244, 239, 0) 42%, rgba(245, 244, 239, 0.08) 100%),
+        linear-gradient(90deg, rgba(15, 79, 67, 0.05), rgba(179, 96, 63, 0.04));
+      pointer-events: none;
+    }
+
+    .coast {
+      display: none;
+    }
+
+    .route-svg {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+    }
+
+    .route-halo {
+      fill: none;
+      stroke: #fff7e6;
+      stroke-width: 2.3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.92;
+    }
+
+    .route-line {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 1.28;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.16));
+    }
+
+    #pins {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+    }
+
+    .leaflet-container {
+      font-family: inherit;
+      color: #17342f;
+    }
+
+    .leaflet-control-zoom a {
+      color: #17342f;
+    }
+
+    .leaflet-control-attribution {
+      color: #546660;
+      font-size: 10px;
+    }
+
+    .leaflet-number-marker {
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+    }
+
+    .leaflet-marker-pin {
+      display: grid;
+      width: 32px;
+      height: 32px;
+      place-items: center;
+      border: 3px solid #fffdf7;
+      border-radius: 50% 50% 50% 8px;
+      background: var(--accent);
+      box-shadow: 0 10px 22px rgba(26, 43, 37, 0.32);
+      transform: rotate(-45deg);
+    }
+
+    .leaflet-marker-pin span {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1;
+      transform: rotate(45deg);
+    }
+
+    .leaflet-number-marker.is-active .leaflet-marker-pin {
+      width: 42px;
+      height: 42px;
+      border-width: 4px;
+      box-shadow: 0 14px 28px rgba(26, 43, 37, 0.36);
+    }
+
+    .leaflet-tooltip.leaflet-spot-label {
+      min-width: 74px;
+      max-width: 190px;
+      padding: 7px 9px;
+      border: 1px solid rgba(22, 52, 47, 0.14);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.98);
+      color: #17342f;
+      box-shadow: 0 10px 22px rgba(30, 48, 42, 0.14);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.25;
+      text-align: center;
+      white-space: nowrap;
+      word-break: keep-all;
+      writing-mode: horizontal-tb;
+    }
+
+    .leaflet-tooltip.leaflet-spot-label.is-active {
+      border-color: var(--accent);
+      box-shadow: 0 12px 28px rgba(30, 48, 42, 0.2);
+    }
+
+    .map-label {
+      position: absolute;
+      left: 22px;
+      top: 22px;
+      z-index: 4;
+      max-width: 330px;
+      padding: 14px 16px;
+      border: 1px solid rgba(22, 52, 47, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.96);
+      box-shadow: 0 14px 40px rgba(30, 48, 42, 0.12);
+    }
+
+    .map-label strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .map-label span {
+      display: block;
+      margin-top: 6px;
+      color: #5d6b66;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .pin {
+      position: absolute;
+      display: grid;
+      width: 62px;
+      justify-items: center;
+      transform: translate(-50%, -100%);
+      border: 0;
+      background: transparent;
+      color: #17342f;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .pin img {
+      width: 38px;
+      height: 38px;
+      filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.22));
+    }
+
+    .pin.is-active img {
+      width: 46px;
+      height: 46px;
+    }
+
+    .pin span {
+      display: inline-flex;
+      min-width: 24px;
+      height: 24px;
+      margin-top: -34px;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+      pointer-events: none;
+    }
+
+    .pin-name {
+      max-width: 106px;
+      margin-top: 13px;
+      padding: 6px 8px;
+      border: 1px solid rgba(22, 52, 47, 0.12);
+      border-radius: 6px;
+      background: rgba(255, 253, 247, 0.98);
+      color: #18352f;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.25;
+      box-shadow: 0 8px 18px rgba(30, 48, 42, 0.1);
+    }
+
+    .side-panel {
+      min-height: 0;
+      overflow: auto;
+      padding: 18px;
+      border-left: 1px solid rgba(22, 52, 47, 0.1);
+      background: #f5f4ef;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      min-width: 116px;
+      height: 42px;
+      padding: 0 14px;
+      border: 1px solid rgba(22, 52, 47, 0.13);
+      border-radius: 8px;
+      background: #fffdf7;
+      color: #35554e;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 750;
+    }
+
+    .tab.is-active {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .panel {
+      margin-top: 12px;
+      overflow: hidden;
+      padding: 0 0 18px;
+      border: 1px solid rgba(22, 52, 47, 0.09);
+      border-top: 6px solid var(--accent);
+      border-radius: 8px;
+      background: #fffdf7;
+      box-shadow: 0 14px 32px rgba(30, 48, 42, 0.08);
+    }
+
+    .route-cover {
+      display: block;
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: #e6e0d2;
+    }
+
+    .route-row {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 18px 18px 0;
+    }
+
+    .route-name {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.25;
+      font-weight: 800;
+    }
+
+    .route-theme {
+      margin-top: 7px;
+      color: #65716d;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .duration {
+      flex: 0 0 auto;
+      min-width: 72px;
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: rgba(15, 107, 90, 0.09);
+      color: var(--accent);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 18px 0;
+    }
+
+    .metric {
+      min-height: 68px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #f1efe6;
+    }
+
+    .metric span {
+      display: block;
+      color: #7a7f78;
+      font-size: 12px;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 6px;
+      color: #18352f;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .summary {
+      margin: 16px 18px 0;
+      color: #465650;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .spot-card {
+      overflow: hidden;
+      margin-top: 14px;
+      padding: 0 0 18px;
+      border: 1px solid rgba(22, 52, 47, 0.09);
+      border-left: 6px solid var(--accent);
+      border-radius: 8px;
+      background: #fffdf7;
+      box-shadow: 0 12px 26px rgba(30, 48, 42, 0.07);
+    }
+
+    .spot-visual {
+      display: block;
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+      background: #e6e0d2;
+    }
+
+    .spot-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px 0;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .category {
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: rgba(22, 52, 47, 0.06);
+      color: #4b5a55;
+    }
+
+    .spot-name {
+      margin: 12px 18px 0;
+      color: #14352f;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 850;
+    }
+
+    .address {
+      margin: 7px 18px 0;
+      color: #6a746f;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .copy {
+      margin: 14px 18px 0;
+      color: #42524c;
+      font-size: 14px;
+      line-height: 1.68;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 18px 0;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: #efe5d6;
+      color: #75543f;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 16px 18px 0;
+    }
+
+    .action {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 760;
+      text-decoration: none;
+    }
+
+    .action.primary {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .action.secondary {
+      border: 1px solid rgba(22, 52, 47, 0.16);
+      background: #fff;
+      color: #17342f;
+    }
+
+    .section-title {
+      margin: 22px 2px 10px;
+      color: #18352f;
+      font-size: 17px;
+      font-weight: 820;
+    }
+
+    .timeline {
+      overflow: hidden;
+      border: 1px solid rgba(22, 52, 47, 0.08);
+      border-radius: 8px;
+      background: #fffdf7;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 30px 76px 1fr 18px;
+      gap: 12px;
+      width: 100%;
+      min-height: 86px;
+      padding: 14px;
+      border: 0;
+      border-bottom: 1px solid rgba(22, 52, 47, 0.08);
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .timeline-thumb {
+      display: block;
+      width: 76px;
+      height: 58px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #e6e0d2;
+    }
+
+    .timeline-item:last-child {
+      border-bottom: 0;
+    }
+
+    .timeline-item.is-current {
+      background: #f5f0e4;
+    }
+
+    .timeline-index {
+      display: flex;
+      width: 28px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #16342f;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .timeline-title {
+      display: block;
+      color: #1a3730;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .timeline-meta {
+      display: block;
+      margin-top: 5px;
+      color: #7b817b;
+      font-size: 12px;
+    }
+
+    .timeline-note {
+      display: block;
+      margin-top: 7px;
+      color: #4f5f59;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .timeline-arrow {
+      align-self: center;
+      color: #9c8e78;
+      font-size: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+      }
+
+      .map-panel {
+        height: 520px;
+        min-height: 520px;
+      }
+
+      .side-panel {
+        border-left: 0;
+        border-top: 1px solid rgba(22, 52, 47, 0.1);
+      }
+    }
+
+    @media (max-width: 560px) {
+      .topbar {
+        padding: 16px;
+      }
+
+      .brand-title {
+        font-size: 21px;
+      }
+
+      .map-panel {
+        height: 430px;
+        min-height: 430px;
+      }
+
+      .map-label {
+        left: 14px;
+        right: 14px;
+        top: 14px;
+        max-width: none;
+      }
+
+      .side-panel {
+        padding: 14px;
+      }
+
+      .metrics,
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .pin-name {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div>
+        <span class="brand-kicker">Shantou & Minnan Qiaopi Trail</span>
+        <h1 class="brand-title">ä¾¨æ¹ææ¸¸è·¯çº¿å¾</h1>
+      </div>
+      <button class="icon-button" id="saveButton" type="button" aria-label="æ¶èå½åè·¯çº¿">â</button>
+    </header>
+
+    <main class="layout">
+      <section class="map-panel" id="mapPanel" aria-label="è·¯çº¿å°å¾é¢è§">
+        <div class="leaflet-map" id="leafletMap" aria-hidden="true"></div>
+        <div class="fallback-map" aria-hidden="true">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none">
+            <rect class="map-land" x="0" y="0" width="100" height="100"></rect>
+            <path class="map-park" d="M6 10 C17 3 30 7 36 18 C27 28 12 28 6 18 Z"></path>
+            <path class="map-park" d="M61 14 C77 9 87 17 91 31 C79 36 66 31 61 20 Z"></path>
+            <path class="map-park" d="M18 70 C30 62 44 65 50 78 C39 91 25 89 18 77 Z"></path>
+            <path class="map-water" d="M0 77 C15 72 27 76 39 82 C52 88 70 86 100 76 L100 100 L0 100 Z"></path>
+            <path class="map-water" d="M78 0 C82 13 85 26 91 38 C95 47 98 56 100 66 L100 0 Z"></path>
+            <path class="map-water-line" d="M3 48 C15 45 23 39 34 39 C47 39 54 48 66 48 C77 48 86 42 98 41"></path>
+            <path class="map-water-line" d="M63 0 C61 14 57 26 57 37 C57 49 64 60 63 74 C62 85 57 92 54 100"></path>
+            <path class="map-road-major halo" d="M4 31 C18 30 28 28 39 31 C52 35 60 41 75 40 C86 39 93 35 99 33"></path>
+            <path class="map-road-major halo" d="M9 65 C25 62 40 57 53 58 C66 59 77 67 96 65"></path>
+            <path class="map-road-major halo" d="M21 5 C29 20 36 34 42 49 C48 64 49 79 51 98"></path>
+            <path class="map-road-major halo" d="M70 8 C68 21 66 35 69 48 C72 61 83 73 90 93"></path>
+            <path class="map-road-major" d="M4 31 C18 30 28 28 39 31 C52 35 60 41 75 40 C86 39 93 35 99 33"></path>
+            <path class="map-road-major" d="M9 65 C25 62 40 57 53 58 C66 59 77 67 96 65"></path>
+            <path class="map-road-major" d="M21 5 C29 20 36 34 42 49 C48 64 49 79 51 98"></path>
+            <path class="map-road-major" d="M70 8 C68 21 66 35 69 48 C72 61 83 73 90 93"></path>
+            <path class="map-road-minor halo" d="M6 18 L36 24 L57 19 L79 23 L96 20"></path>
+            <path class="map-road-minor halo" d="M8 43 L25 48 L43 44 L61 50 L83 49 L96 54"></path>
+            <path class="map-road-minor halo" d="M12 83 L29 76 L47 75 L65 79 L87 76"></path>
+            <path class="map-road-minor halo" d="M33 4 L32 22 L35 40 L31 58 L33 78 L37 98"></path>
+            <path class="map-road-minor halo" d="M55 5 L51 21 L51 40 L55 58 L53 77 L49 96"></path>
+            <path class="map-road-minor halo" d="M84 3 L82 18 L84 34 L81 51 L85 70 L82 97"></path>
+            <path class="map-road-minor" d="M6 18 L36 24 L57 19 L79 23 L96 20"></path>
+            <path class="map-road-minor" d="M8 43 L25 48 L43 44 L61 50 L83 49 L96 54"></path>
+            <path class="map-road-minor" d="M12 83 L29 76 L47 75 L65 79 L87 76"></path>
+            <path class="map-road-minor" d="M33 4 L32 22 L35 40 L31 58 L33 78 L37 98"></path>
+            <path class="map-road-minor" d="M55 5 L51 21 L51 40 L55 58 L53 77 L49 96"></path>
+            <path class="map-road-minor" d="M84 3 L82 18 L84 34 L81 51 L85 70 L82 97"></path>
+          </svg>
+          <div class="fallback-label place" style="left: 22%; top: 25%;">æ±å¤´èå</div>
+          <div class="fallback-label place" style="left: 77%; top: 28%;">æ¾æµ·ä¾¨ä¹¡</div>
+          <div class="fallback-label place" style="left: 36%; top: 72%;">æ³å·å¤å</div>
+          <div class="fallback-label place" style="left: 71%; top: 73%;">å¦é¨å£å²¸</div>
+          <div class="fallback-label" style="left: 54%; top: 16%;">é¾æ¹åº</div>
+          <div class="fallback-label" style="left: 18%; top: 58%;">éå¹³åº</div>
+          <div class="fallback-label road" style="left: 47%; top: 31%;">åå¸ä¸»å¹²è·¯</div>
+          <div class="fallback-label road" style="left: 56%; top: 63%;">æ²¿æµ·éé</div>
+          <div class="fallback-label water" style="left: 40%; top: 48%;">æ²³é / åæ¹¾</div>
+          <div class="fallback-label water" style="left: 83%; top: 88%;">æµ·å²¸çº¿</div>
+        </div>
+        <img class="map-cover" id="mapCover" alt="">
+        <div class="map-scrim"></div>
+        <div class="coast"></div>
+        <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path class="route-halo" id="routeHalo"></path>
+          <path class="route-line" id="routeLine"></path>
+        </svg>
+        <div class="map-label">
+          <strong id="mapRouteName"></strong>
+          <span id="mapRouteTheme"></span>
+        </div>
+        <div id="pins"></div>
+      </section>
+
+      <aside class="side-panel">
+        <nav class="tabs" id="tabs" aria-label="è·¯çº¿åæ¢"></nav>
+
+        <section class="panel" id="routePanel">
+          <img class="route-cover" id="routeCover" alt="">
+          <div class="route-row">
+            <div>
+              <h2 class="route-name" id="routeName"></h2>
+              <div class="route-theme" id="routeTheme"></div>
+            </div>
+            <div class="duration" id="routeDuration"></div>
+          </div>
+          <div class="metrics">
+            <div class="metric">
+              <span>è·ç¦»</span>
+              <strong id="routeDistance"></strong>
+            </div>
+            <div class="metric">
+              <span>äº¤é</span>
+              <strong id="routeTransport"></strong>
+            </div>
+          </div>
+          <p class="summary" id="routeSummary"></p>
+        </section>
+
+        <section class="spot-card" id="spotCard">
+          <img class="spot-visual" id="spotVisual" alt="">
+          <div class="spot-topline">
+            <span id="spotOrder"></span>
+            <span class="category" id="spotCategory"></span>
+          </div>
+          <h3 class="spot-name" id="spotName"></h3>
+          <p class="address" id="spotAddress"></p>
+          <p class="copy" id="spotCopy"></p>
+          <div class="tags" id="spotTags"></div>
+          <div class="actions">
+            <a class="action primary" id="mapLink" target="_blank" rel="noreferrer">å°å¾å¯¼èª</a>
+            <button class="action secondary" id="nextSpot" type="button">ä¸ä¸ç«</button>
+          </div>
+        </section>
+
+        <div class="section-title">è·¯çº¿ç«ç¹</div>
+        <div class="timeline" id="timeline"></div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="./assets/vendor/leaflet/leaflet.js"></script>
+  <script src="./preview-data.js"></script>
+  <script>
+    const routes = window.qiaopiRoutes || []
+    let activeRouteIndex = 0
+    let activeSpotIndex = 0
+    const savedRoutes = new Set(JSON.parse(localStorage.getItem('qiaopiSavedRoutes') || '[]'))
+
+    const elements = {
+      mapPanel: document.querySelector('#mapPanel'),
+      leafletMap: document.querySelector('#leafletMap'),
+      tabs: document.querySelector('#tabs'),
+      routePanel: document.querySelector('#routePanel'),
+      spotCard: document.querySelector('#spotCard'),
+      routeHalo: document.querySelector('#routeHalo'),
+      routeLine: document.querySelector('#routeLine'),
+      pins: document.querySelector('#pins'),
+      mapCover: document.querySelector('#mapCover'),
+      routeCover: document.querySelector('#routeCover'),
+      spotVisual: document.querySelector('#spotVisual'),
+      saveButton: document.querySelector('#saveButton'),
+      mapRouteName: document.querySelector('#mapRouteName'),
+      mapRouteTheme: document.querySelector('#mapRouteTheme'),
+      routeName: document.querySelector('#routeName'),
+      routeTheme: document.querySelector('#routeTheme'),
+      routeDuration: document.querySelector('#routeDuration'),
+      routeDistance: document.querySelector('#routeDistance'),
+      routeTransport: document.querySelector('#routeTransport'),
+      routeSummary: document.querySelector('#routeSummary'),
+      spotOrder: document.querySelector('#spotOrder'),
+      spotCategory: document.querySelector('#spotCategory'),
+      spotName: document.querySelector('#spotName'),
+      spotAddress: document.querySelector('#spotAddress'),
+      spotCopy: document.querySelector('#spotCopy'),
+      spotTags: document.querySelector('#spotTags'),
+      mapLink: document.querySelector('#mapLink'),
+      nextSpot: document.querySelector('#nextSpot'),
+      timeline: document.querySelector('#timeline')
+    }
+
+    let leafletMap = null
+    let leafletLayer = null
+    let pendingLeafletRoute = null
+    let leafletRenderQueued = false
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+    }
+
+    function ensureLeafletMap() {
+      if (leafletMap) {
+        return true
+      }
+
+      if (!window.L || !elements.leafletMap) {
+        elements.mapPanel.classList.remove('leaflet-ready')
+        return false
+      }
+
+      leafletMap = L.map(elements.leafletMap, {
+        attributionControl: true,
+        zoomControl: false,
+        scrollWheelZoom: true,
+        tap: true
+      })
+
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(leafletMap)
+
+      L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', {
+        maxZoom: 18,
+        subdomains: ['1', '2', '3', '4'],
+        attribution: '&copy; é«å¾·å°å¾'
+      }).addTo(leafletMap)
+
+      leafletLayer = L.layerGroup().addTo(leafletMap)
+      elements.mapPanel.classList.add('leaflet-ready')
+      setTimeout(() => leafletMap.invalidateSize(), 0)
+      return true
+    }
+
+    function renderLeafletMap(route) {
+      if (!ensureLeafletMap()) {
+        return
+      }
+
+      leafletLayer.clearLayers()
+      const coordinates = route.spots.map((item) => [item.latitude, item.longitude])
+
+      L.polyline(coordinates, {
+        color: '#fff7e6',
+        weight: 10,
+        opacity: 0.92,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(leafletLayer)
+
+      L.polyline(coordinates, {
+        color: route.accent,
+        weight: 5,
+        opacity: 0.96,
+        lineCap: 'round',
+        lineJoin: 'round'
+      }).addTo(leafletLayer)
+
+      route.spots.forEach((item, index) => {
+        const active = index === activeSpotIndex
+        const iconSize = active ? [42, 42] : [32, 32]
+        const tooltipDirections = ['top', 'right', 'bottom', 'left', 'top']
+        const tooltipDirection = tooltipDirections[index % tooltipDirections.length]
+        const tooltipOffsets = {
+          top: [0, active ? -46 : -38],
+          right: [active ? 24 : 20, -12],
+          left: [active ? -24 : -20, -12],
+          bottom: [0, active ? 22 : 16]
+        }
+        const icon = L.divIcon({
+          className: `leaflet-number-marker ${active ? 'is-active' : ''}`,
+          html: `<span class="leaflet-marker-pin"><span>${index + 1}</span></span>`,
+          iconSize,
+          iconAnchor: [iconSize[0] / 2, iconSize[1]]
+        })
+
+        const marker = L.marker([item.latitude, item.longitude], {
+          icon,
+          keyboard: true,
+          title: `${index + 1}. ${item.name}`
+        }).addTo(leafletLayer)
+
+        marker.bindTooltip(`${index + 1}. ${escapeHtml(item.name)}`, {
+          permanent: true,
+          direction: tooltipDirection,
+          offset: tooltipOffsets[tooltipDirection],
+          className: `leaflet-spot-label ${active ? 'is-active' : ''}`,
+          opacity: 1
+        })
+
+        marker.on('click', () => {
+          activeSpotIndex = index
+          render()
+        })
+      })
+
+      const bounds = L.latLngBounds(coordinates)
+      const paddingTopLeft = window.innerWidth <= 560 ? [18, 92] : [28, 92]
+      leafletMap.fitBounds(bounds.pad(0.28), {
+        animate: false,
+        paddingTopLeft,
+        paddingBottomRight: [28, 36]
+      })
+      setTimeout(() => leafletMap.invalidateSize(), 0)
+    }
+
+    function scheduleLeafletMap(route) {
+      pendingLeafletRoute = route
+
+      const paintLeaflet = () => {
+        leafletRenderQueued = false
+        if (pendingLeafletRoute) {
+          renderLeafletMap(pendingLeafletRoute)
+        }
+      }
+
+      if (document.readyState === 'complete') {
+        requestAnimationFrame(paintLeaflet)
+        return
+      }
+
+      if (!leafletRenderQueued) {
+        leafletRenderQueued = true
+        window.addEventListener('load', () => {
+          requestAnimationFrame(paintLeaflet)
+        }, { once: true })
+      }
+    }
+
+    function projectPoints(route) {
+      const longitudes = route.spots.map((spot) => spot.longitude)
+      const latitudes = route.spots.map((spot) => spot.latitude)
+      const minLon = Math.min(...longitudes)
+      const maxLon = Math.max(...longitudes)
+      const minLat = Math.min(...latitudes)
+      const maxLat = Math.max(...latitudes)
+      const lonRange = maxLon - minLon || 1
+      const latRange = maxLat - minLat || 1
+
+      return route.spots.map((spot) => ({
+        x: 11 + ((spot.longitude - minLon) / lonRange) * 78,
+        y: 82 - ((spot.latitude - minLat) / latRange) * 62
+      }))
+    }
+
+    function render() {
+      const route = routes[activeRouteIndex]
+      const spot = route.spots[activeSpotIndex]
+      const points = projectPoints(route)
+      const accent = route.accent
+
+      document.documentElement.style.setProperty('--accent', accent)
+      elements.routePanel.style.setProperty('--accent', accent)
+      elements.spotCard.style.setProperty('--accent', accent)
+
+      elements.tabs.innerHTML = routes.map((item, index) => `
+        <button class="tab ${index === activeRouteIndex ? 'is-active' : ''}" type="button" data-route="${index}">
+          ${item.shortName}
+        </button>
+      `).join('')
+
+      elements.mapRouteName.textContent = route.name
+      elements.mapRouteTheme.textContent = route.theme
+      elements.mapCover.src = route.cover
+      elements.routeCover.src = route.cover
+      elements.routeCover.alt = `${route.name}å°é¢`
+      elements.routeName.textContent = route.name
+      elements.routeTheme.textContent = route.theme
+      elements.routeDuration.textContent = route.duration
+      elements.routeDistance.textContent = route.distance
+      elements.routeTransport.textContent = route.transport
+      elements.routeSummary.textContent = route.summary
+
+      const fallbackRoutePath = points.map((point, index) => {
+        return `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`
+      }).join(' ')
+
+      elements.routeHalo.setAttribute('d', fallbackRoutePath)
+      elements.routeLine.setAttribute('d', fallbackRoutePath)
+      scheduleLeafletMap(route)
+
+      elements.pins.innerHTML = route.spots.map((item, index) => {
+        const point = points[index]
+        const active = index === activeSpotIndex
+        return `
+          <button class="pin ${active ? 'is-active' : ''}" type="button" data-spot="${index}" style="left: ${point.x}%; top: ${point.y}%;">
+            <img src="./assets/${active ? 'marker-active.png' : 'marker.png'}" alt="">
+            <span>${index + 1}</span>
+            <div class="pin-name">${item.name}</div>
+          </button>
+        `
+      }).join('')
+
+      elements.saveButton.textContent = savedRoutes.has(route.id) ? 'â' : 'â'
+      elements.spotOrder.textContent = `ç¬¬ ${activeSpotIndex + 1} ç«`
+      elements.spotCategory.textContent = spot.category
+      elements.spotName.textContent = spot.name
+      elements.spotAddress.textContent = spot.address
+      elements.spotCopy.textContent = spot.qiaopi
+      elements.spotVisual.src = spot.image || route.cover
+      elements.spotVisual.alt = `${spot.name}å¾ç`
+      elements.spotTags.innerHTML = spot.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')
+      elements.mapLink.href = `https://uri.amap.com/marker?position=${spot.longitude},${spot.latitude}&name=${encodeURIComponent(spot.name)}`
+
+      elements.timeline.innerHTML = route.spots.map((item, index) => `
+        <button class="timeline-item ${index === activeSpotIndex ? 'is-current' : ''}" type="button" data-spot="${index}">
+          <span class="timeline-index">${index + 1}</span>
+          <img class="timeline-thumb" src="${item.image || route.cover}" alt="">
+          <span>
+            <span class="timeline-title">${item.name}</span>
+            <span class="timeline-meta">${item.stay} Â· ${item.category}</span>
+            <span class="timeline-note">${item.highlight}</span>
+          </span>
+          <span class="timeline-arrow">âº</span>
+        </button>
+      `).join('')
+    }
+
+    elements.tabs.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-route]')
+      if (!button) return
+      activeRouteIndex = Number(button.dataset.route)
+      activeSpotIndex = 0
+      render()
+    })
+
+    elements.pins.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-spot]')
+      if (!button) return
+      activeSpotIndex = Number(button.dataset.spot)
+      render()
+    })
+
+    elements.timeline.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-spot]')
+      if (!button) return
+      activeSpotIndex = Number(button.dataset.spot)
+      render()
+    })
+
+    elements.nextSpot.addEventListener('click', () => {
+      const route = routes[activeRouteIndex]
+      activeSpotIndex = (activeSpotIndex + 1) % route.spots.length
+      render()
+    })
+
+    elements.saveButton.addEventListener('click', () => {
+      const routeId = routes[activeRouteIndex].id
+      if (savedRoutes.has(routeId)) {
+        savedRoutes.delete(routeId)
+      } else {
+        savedRoutes.add(routeId)
+      }
+      localStorage.setItem('qiaopiSavedRoutes', JSON.stringify([...savedRoutes]))
+      render()
+    })
+
+    render()
+  </script>
+</body>
+</html>
+
