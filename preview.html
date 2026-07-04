@@ -74,6 +74,245 @@
       line-height: 1;
     }
 
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    .topbar-link {
+      display: none;
+      min-width: 56px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 760;
+    }
+
+    .is-route-open .topbar-link {
+      display: inline-flex;
+    }
+
+    .is-route-open #saveButton {
+      display: inline-flex;
+    }
+
+    #saveButton {
+      display: none;
+    }
+
+    .entry-view {
+      min-height: calc(100vh - 86px);
+      background: #f5f4ef;
+    }
+
+    .entry-hero {
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background: #17342f;
+    }
+
+    .entry-hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .entry-hero::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      background:
+        linear-gradient(180deg, rgba(10, 24, 21, 0.08) 0%, rgba(10, 24, 21, 0.55) 54%, rgba(10, 24, 21, 0.88) 100%),
+        linear-gradient(90deg, rgba(15, 79, 67, 0.78), rgba(104, 74, 51, 0.12));
+    }
+
+    .entry-hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-height: 520px;
+      align-content: end;
+      gap: 22px;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 54px 28px 42px;
+      color: #fff;
+    }
+
+    .entry-kicker {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+      font-weight: 760;
+    }
+
+    .entry-title {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.08;
+      font-weight: 880;
+      letter-spacing: 0;
+    }
+
+    .entry-copy {
+      max-width: 680px;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .entry-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      max-width: 520px;
+    }
+
+    .entry-stat {
+      min-height: 86px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .entry-stat strong,
+    .entry-stat span {
+      display: block;
+    }
+
+    .entry-stat strong {
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .entry-stat span {
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 13px;
+    }
+
+    .entry-content {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+
+    .entry-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .entry-heading h2 {
+      margin: 0;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    .entry-heading p {
+      margin: 8px 0 0;
+      color: #68746f;
+      line-height: 1.5;
+    }
+
+    .entry-routes {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .entry-route-card {
+      display: flex;
+      min-width: 0;
+      overflow: hidden;
+      flex-direction: column;
+      border: 1px solid rgba(22, 52, 47, 0.09);
+      border-top: 5px solid var(--accent, #0f6b5a);
+      border-radius: 8px;
+      background: #fffdf7;
+      color: inherit;
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 0 16px 42px rgba(30, 48, 42, 0.08);
+    }
+
+    .entry-route-card img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #e6e0d2;
+    }
+
+    .entry-route-body {
+      display: grid;
+      flex: 1;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .entry-route-meta,
+    .entry-route-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #7a817b;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .entry-route-badge {
+      flex: 0 0 auto;
+      color: var(--accent, #0f6b5a);
+      font-weight: 820;
+    }
+
+    .entry-route-name {
+      color: #14352f;
+      font-size: 20px;
+      font-weight: 820;
+      line-height: 1.25;
+    }
+
+    .entry-route-theme {
+      color: #5f6c67;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .entry-route-summary {
+      color: #46564f;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .entry-route-bottom {
+      align-self: end;
+      padding-top: 12px;
+      border-top: 1px solid rgba(22, 52, 47, 0.08);
+      font-weight: 700;
+    }
+
+    .entry-route-action {
+      flex: 0 0 auto;
+      color: var(--accent, #0f6b5a);
+      font-weight: 820;
+    }
+
     .layout {
       display: grid;
       grid-template-columns: minmax(420px, 1.25fr) minmax(360px, 0.75fr);
@@ -763,6 +1002,10 @@
         overflow: visible;
       }
 
+      .entry-routes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .map-panel {
         height: 520px;
         min-height: 520px;
@@ -781,6 +1024,26 @@
 
       .brand-title {
         font-size: 21px;
+      }
+
+      .entry-hero,
+      .entry-hero-content {
+        min-height: 560px;
+      }
+
+      .entry-hero-content,
+      .entry-content {
+        padding-right: 16px;
+        padding-left: 16px;
+      }
+
+      .entry-title {
+        font-size: 40px;
+      }
+
+      .entry-routes,
+      .entry-stats {
+        grid-template-columns: 1fr;
       }
 
       .map-panel {
@@ -817,10 +1080,50 @@
         <span class="brand-kicker">Shantou & Minnan Qiaopi Trail</span>
         <h1 class="brand-title">侨批旅游路线图</h1>
       </div>
-      <button class="icon-button" id="saveButton" type="button" aria-label="收藏当前路线">☆</button>
+      <div class="topbar-actions">
+        <button class="topbar-link" id="homeButton" type="button">总览</button>
+        <button class="icon-button" id="saveButton" type="button" aria-label="收藏当前路线">☆</button>
+      </div>
     </header>
 
-    <main class="layout">
+    <main class="entry-view" id="entryView">
+      <section class="entry-hero">
+        <img class="entry-hero-image" id="entryHeroImage" alt="">
+        <div class="entry-hero-content">
+          <div>
+            <div class="entry-kicker">侨批文化旅行总览</div>
+            <h2 class="entry-title">从一封家书出发，走进潮汕与闽南侨乡</h2>
+          </div>
+          <p class="entry-copy">四条路线串联展馆、古港、侨宅、信局与海岸纪念地，适合城市漫游、研学和跨城深度游。</p>
+          <div class="entry-stats">
+            <div class="entry-stat">
+              <strong>4</strong>
+              <span>条路线</span>
+            </div>
+            <div class="entry-stat">
+              <strong>17</strong>
+              <span>个点位</span>
+            </div>
+            <div class="entry-stat">
+              <strong>2</strong>
+              <span>大区域</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="entry-content">
+        <div class="entry-heading">
+          <div>
+            <h2>路线总览</h2>
+            <p>先选主题，再进入地图和站点详情。</p>
+          </div>
+        </div>
+        <div class="entry-routes" id="entryRoutes"></div>
+      </section>
+    </main>
+
+    <main class="layout" id="routeView" hidden>
       <section class="map-panel" id="mapPanel" aria-label="路线地图预览">
         <div class="leaflet-map" id="leafletMap" aria-hidden="true"></div>
         <div class="fallback-map" aria-hidden="true">
@@ -930,11 +1233,16 @@
   <script src="./preview-data.js"></script>
   <script>
     const routes = window.qiaopiRoutes || []
+    let hasEntered = false
     let activeRouteIndex = 0
     let activeSpotIndex = 0
     const savedRoutes = new Set(JSON.parse(localStorage.getItem('qiaopiSavedRoutes') || '[]'))
 
     const elements = {
+      entryView: document.querySelector('#entryView'),
+      routeView: document.querySelector('#routeView'),
+      entryHeroImage: document.querySelector('#entryHeroImage'),
+      entryRoutes: document.querySelector('#entryRoutes'),
       mapPanel: document.querySelector('#mapPanel'),
       leafletMap: document.querySelector('#leafletMap'),
       tabs: document.querySelector('#tabs'),
@@ -946,6 +1254,7 @@
       mapCover: document.querySelector('#mapCover'),
       routeCover: document.querySelector('#routeCover'),
       spotVisual: document.querySelector('#spotVisual'),
+      homeButton: document.querySelector('#homeButton'),
       saveButton: document.querySelector('#saveButton'),
       mapRouteName: document.querySelector('#mapRouteName'),
       mapRouteTheme: document.querySelector('#mapRouteTheme'),
@@ -978,6 +1287,50 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;')
+    }
+
+    function setShellMode() {
+      document.body.classList.toggle('is-route-open', hasEntered)
+      elements.entryView.hidden = hasEntered
+      elements.routeView.hidden = !hasEntered
+    }
+
+    function renderEntry() {
+      const heroRoute = routes[0]
+      if (!heroRoute) return
+
+      elements.entryHeroImage.src = heroRoute.cover
+      elements.entryHeroImage.alt = '侨批旅游路线封面'
+      elements.entryRoutes.innerHTML = routes.map((route, index) => {
+        const firstSpots = route.spots.slice(0, 3).map((spot) => spot.name).join(' / ')
+        return `
+          <button class="entry-route-card" type="button" data-route="${index}" style="--accent: ${route.accent};">
+            <img src="${route.cover}" alt="${escapeHtml(route.name)}封面">
+            <span class="entry-route-body">
+              <span class="entry-route-meta">
+                <span class="entry-route-badge">${escapeHtml(route.shortName)}</span>
+                <span>${escapeHtml(route.duration)} · ${escapeHtml(route.distance)}</span>
+              </span>
+              <span class="entry-route-name">${escapeHtml(route.name)}</span>
+              <span class="entry-route-theme">${escapeHtml(route.theme)}</span>
+              <span class="entry-route-summary">${escapeHtml(route.summary)}</span>
+              <span class="entry-route-bottom">
+                <span>${escapeHtml(firstSpots)}</span>
+                <span class="entry-route-action">进入路线 ›</span>
+              </span>
+            </span>
+          </button>
+        `
+      }).join('')
+    }
+
+    function openRoute(index) {
+      activeRouteIndex = Number(index) || 0
+      activeSpotIndex = 0
+      hasEntered = true
+      setShellMode()
+      render()
+      requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
     }
 
     function ensureLeafletMap() {
@@ -1125,6 +1478,11 @@
     }
 
     function render() {
+      if (!hasEntered) {
+        setShellMode()
+        return
+      }
+
       const route = routes[activeRouteIndex]
       const spot = route.spots[activeSpotIndex]
       const points = projectPoints(route)
@@ -1197,6 +1555,18 @@
       `).join('')
     }
 
+    elements.entryRoutes.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-route]')
+      if (!button) return
+      openRoute(button.dataset.route)
+    })
+
+    elements.homeButton.addEventListener('click', () => {
+      hasEntered = false
+      setShellMode()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+
     elements.tabs.addEventListener('click', (event) => {
       const button = event.target.closest('[data-route]')
       if (!button) return
@@ -1236,7 +1606,15 @@
       render()
     })
 
-    render()
+    renderEntry()
+
+    const initialRoute = new URLSearchParams(window.location.search).get('route')
+    if (initialRoute) {
+      const routeIndex = routes.findIndex((route) => route.id === initialRoute)
+      openRoute(routeIndex >= 0 ? routeIndex : initialRoute)
+    } else {
+      setShellMode()
+    }
   </script>
 </body>
 </html>
