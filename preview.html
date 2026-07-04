@@ -17,6 +17,10 @@
       box-sizing: border-box;
     }
 
+    [hidden] {
+      display: none !important;
+    }
+
     body {
       min-height: 100vh;
       margin: 0;
@@ -109,12 +113,13 @@
 
     .entry-view {
       min-height: calc(100vh - 86px);
-      background: #f5f4ef;
+      background:
+        linear-gradient(180deg, #f8f6ef 0%, #f2f4ee 48%, #eef3ef 100%);
     }
 
     .entry-hero {
       position: relative;
-      min-height: 520px;
+      min-height: 560px;
       overflow: hidden;
       background: #17342f;
     }
@@ -132,59 +137,67 @@
       inset: 0;
       content: "";
       background:
-        linear-gradient(180deg, rgba(10, 24, 21, 0.08) 0%, rgba(10, 24, 21, 0.55) 54%, rgba(10, 24, 21, 0.88) 100%),
-        linear-gradient(90deg, rgba(15, 79, 67, 0.78), rgba(104, 74, 51, 0.12));
+        linear-gradient(180deg, rgba(9, 22, 19, 0.08) 0%, rgba(9, 22, 19, 0.5) 50%, rgba(9, 22, 19, 0.88) 100%),
+        linear-gradient(90deg, rgba(15, 79, 67, 0.86), rgba(117, 72, 45, 0.2) 58%, rgba(30, 42, 61, 0.18));
     }
 
     .entry-hero-content {
       position: relative;
       z-index: 1;
       display: grid;
-      min-height: 520px;
+      min-height: 560px;
       align-content: end;
-      gap: 22px;
-      max-width: 1120px;
+      gap: 20px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 54px 28px 42px;
+      padding: 64px 32px 50px;
       color: #fff;
     }
 
     .entry-kicker {
-      color: rgba(255, 255, 255, 0.78);
+      display: inline-flex;
+      width: fit-content;
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.82);
       font-size: 14px;
       font-weight: 760;
     }
 
     .entry-title {
-      max-width: 780px;
+      max-width: 860px;
       margin: 0;
-      font-size: clamp(36px, 5vw, 64px);
+      font-size: 58px;
       line-height: 1.08;
       font-weight: 880;
       letter-spacing: 0;
+      text-wrap: balance;
     }
 
     .entry-copy {
-      max-width: 680px;
+      max-width: 760px;
       margin: 0;
-      color: rgba(255, 255, 255, 0.82);
-      font-size: 17px;
-      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 18px;
+      line-height: 1.7;
     }
 
     .entry-stats {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      max-width: 520px;
+      gap: 14px;
+      max-width: 640px;
     }
 
     .entry-stat {
       min-height: 86px;
-      padding: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.24);
+      padding: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.13);
     }
 
     .entry-stat strong,
@@ -204,9 +217,9 @@
     }
 
     .entry-content {
-      max-width: 1120px;
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 28px;
+      padding: 42px 32px 64px;
     }
 
     .entry-heading {
@@ -214,12 +227,12 @@
       align-items: flex-end;
       justify-content: space-between;
       gap: 18px;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     .entry-heading h2 {
       margin: 0;
-      font-size: 26px;
+      font-size: 32px;
       line-height: 1.2;
     }
 
@@ -231,37 +244,48 @@
 
     .entry-routes {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
     }
 
     .entry-route-card {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(178px, 0.42fr) minmax(0, 1fr);
+      min-height: 274px;
       min-width: 0;
       overflow: hidden;
-      flex-direction: column;
       border: 1px solid rgba(22, 52, 47, 0.09);
-      border-top: 5px solid var(--accent, #0f6b5a);
       border-radius: 8px;
       background: #fffdf7;
       color: inherit;
       cursor: pointer;
       text-align: left;
-      box-shadow: 0 16px 42px rgba(30, 48, 42, 0.08);
+      box-shadow: 0 18px 42px rgba(30, 48, 42, 0.09);
+      transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+    }
+
+    .entry-route-card:hover,
+    .entry-route-card:focus-visible {
+      border-color: color-mix(in srgb, var(--accent, #0f6b5a), #ffffff 35%);
+      box-shadow: 0 22px 46px rgba(30, 48, 42, 0.13);
+      transform: translateY(-2px);
+      outline: none;
     }
 
     .entry-route-card img {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: 100%;
+      min-height: 274px;
       object-fit: cover;
       background: #e6e0d2;
     }
 
     .entry-route-body {
       display: grid;
-      flex: 1;
-      gap: 10px;
-      padding: 16px;
+      gap: 11px;
+      align-content: start;
+      padding: 18px;
+      border-top: 5px solid var(--accent, #0f6b5a);
     }
 
     .entry-route-meta,
@@ -269,10 +293,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       color: #7a817b;
       font-size: 13px;
       line-height: 1.35;
+      flex-wrap: wrap;
     }
 
     .entry-route-badge {
@@ -281,9 +306,17 @@
       font-weight: 820;
     }
 
+    .entry-route-duration {
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--accent, #0f6b5a), #ffffff 88%);
+      color: #40544e;
+      font-weight: 760;
+    }
+
     .entry-route-name {
       color: #14352f;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 820;
       line-height: 1.25;
     }
@@ -294,23 +327,568 @@
       line-height: 1.45;
     }
 
+    .route-mode-summary,
+    .entry-route-modes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .route-mode-pill {
+      display: inline-flex;
+      min-height: 26px;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .route-mode-pill.walk {
+      background: #0f6b5a;
+    }
+
+    .route-mode-pill.drive {
+      background: #286c8f;
+    }
+
     .entry-route-summary {
       color: #46564f;
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.62;
     }
 
     .entry-route-bottom {
       align-self: end;
-      padding-top: 12px;
+      display: grid;
+      justify-content: stretch;
+      padding-top: 14px;
       border-top: 1px solid rgba(22, 52, 47, 0.08);
       font-weight: 700;
     }
 
     .entry-route-action {
-      flex: 0 0 auto;
+      justify-self: start;
       color: var(--accent, #0f6b5a);
       font-weight: 820;
+    }
+
+    .entry-route-spots-label {
+      color: #8a5738;
+      font-size: 12px;
+      font-weight: 820;
+    }
+
+    .entry-route-spots {
+      color: #4c5c56;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .mascot-band {
+      display: grid;
+      grid-template-columns: minmax(190px, 0.42fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: center;
+      margin-top: 30px;
+      padding: 24px;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 253, 247, 0.96), rgba(237, 243, 237, 0.94)),
+        #fffdf7;
+      box-shadow: 0 18px 42px rgba(30, 48, 42, 0.08);
+    }
+
+    .mascot-visual {
+      position: relative;
+      display: grid;
+      min-height: 236px;
+      place-items: center;
+      overflow: hidden;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background:
+        radial-gradient(circle at 54% 38%, rgba(215, 181, 140, 0.35), transparent 42%),
+        linear-gradient(160deg, rgba(15, 107, 90, 0.14), rgba(163, 63, 63, 0.08));
+    }
+
+    .mascot-visual::before,
+    .mascot-visual::after {
+      position: absolute;
+      content: "";
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    .mascot-visual::before {
+      width: 148px;
+      height: 148px;
+      border: 1px dashed rgba(15, 107, 90, 0.32);
+    }
+
+    .mascot-visual::after {
+      right: 18px;
+      bottom: 18px;
+      width: 62px;
+      height: 62px;
+      border: 8px solid rgba(163, 63, 63, 0.13);
+    }
+
+    .mascot-visual img {
+      position: relative;
+      z-index: 1;
+      width: min(228px, 86%);
+      height: auto;
+      filter: drop-shadow(0 18px 24px rgba(30, 48, 42, 0.18));
+      animation: mascotFloat 3.6s ease-in-out infinite;
+    }
+
+    .mascot-copy {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      align-content: center;
+    }
+
+    .mascot-copy h2 {
+      margin: 0;
+      color: #14352f;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .mascot-copy p {
+      max-width: 720px;
+      margin: 0;
+      color: #53655f;
+      font-size: 14px;
+      line-height: 1.68;
+    }
+
+    .mascot-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mascot-traits span {
+      padding: 7px 10px;
+      border-radius: 8px;
+      background: #efe5d6;
+      color: #75543f;
+      font-size: 13px;
+      font-weight: 780;
+    }
+
+    .mascot-motto {
+      width: fit-content;
+      margin-top: 2px;
+      padding: 10px 12px;
+      border-left: 5px solid #a33f3f;
+      border-radius: 8px;
+      background: rgba(255, 247, 223, 0.78);
+      color: #17342f;
+      font-size: 14px;
+      font-weight: 820;
+      line-height: 1.4;
+    }
+
+    @keyframes mascotFloat {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-8px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mascot-visual img {
+        animation: none;
+      }
+    }
+
+    .entry-section-kicker {
+      display: block;
+      margin-bottom: 8px;
+      color: #8a5738;
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .route-picker {
+      margin-top: 30px;
+      padding: 24px;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(239, 246, 240, 0.94), rgba(255, 253, 247, 0.96)),
+        #f6f8f1;
+      box-shadow: 0 18px 42px rgba(30, 48, 42, 0.08);
+    }
+
+    .route-picker-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .route-picker h2 {
+      margin: 0;
+      color: #14352f;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .route-picker-badge {
+      flex: 0 0 auto;
+      min-height: 34px;
+      padding: 8px 11px;
+      border-radius: 8px;
+      background: #17342f;
+      color: #fffdf7;
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .route-picker-layout {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.68fr) minmax(0, 1.32fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .picker-controls {
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .picker-group {
+      display: grid;
+      gap: 9px;
+    }
+
+    .picker-label {
+      color: #4e5f59;
+      font-size: 13px;
+      font-weight: 820;
+    }
+
+    .picker-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+      gap: 8px;
+    }
+
+    .picker-option {
+      min-width: 0;
+      min-height: 42px;
+      padding: 10px 8px;
+      border: 1px solid rgba(22, 52, 47, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.86);
+      color: #2f443e;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 780;
+      line-height: 1.25;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease, transform 150ms ease;
+    }
+
+    .picker-option:hover,
+    .picker-option:focus-visible {
+      border-color: color-mix(in srgb, var(--picker-accent, #0f6b5a), #ffffff 22%);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .picker-option.is-active {
+      border-color: color-mix(in srgb, var(--picker-accent, #0f6b5a), #16342f 22%);
+      background: var(--picker-accent, #0f6b5a);
+      color: #fffdf7;
+      box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .picker-result {
+      display: grid;
+      grid-template-columns: minmax(170px, 0.42fr) minmax(0, 1fr);
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background: #fffdf7;
+    }
+
+    .picker-result img {
+      width: 100%;
+      height: 100%;
+      min-height: 308px;
+      object-fit: cover;
+      background: #e6e0d2;
+    }
+
+    .picker-result-body {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      padding: 18px;
+      border-top: 5px solid var(--picker-accent, #0f6b5a);
+    }
+
+    .picker-result-top,
+    .picker-mini-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .picker-route-short,
+    .picker-score {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 6px 9px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .picker-route-short {
+      background: color-mix(in srgb, var(--picker-accent, #0f6b5a), #ffffff 86%);
+      color: var(--picker-accent, #0f6b5a);
+    }
+
+    .picker-score {
+      background: #17342f;
+      color: #fffdf7;
+    }
+
+    .picker-result h3 {
+      margin: 0;
+      color: #14352f;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .picker-reason {
+      margin: 0;
+      color: #53655f;
+      font-size: 14px;
+      line-height: 1.62;
+    }
+
+    .picker-mini-metric {
+      display: inline-grid;
+      gap: 3px;
+      min-width: 94px;
+      padding: 9px 10px;
+      border: 1px solid rgba(22, 52, 47, 0.09);
+      border-radius: 8px;
+      background: rgba(246, 248, 241, 0.82);
+    }
+
+    .picker-mini-metric span {
+      color: #7a817b;
+      font-size: 11px;
+      font-weight: 760;
+    }
+
+    .picker-mini-metric strong {
+      color: #17342f;
+      font-size: 13px;
+      line-height: 1.25;
+    }
+
+    .picker-spots {
+      display: grid;
+      gap: 7px;
+      padding-top: 2px;
+    }
+
+    .picker-spots span {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      color: #43544e;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .picker-spots b {
+      display: inline-flex;
+      width: 24px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--picker-accent, #0f6b5a);
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .picker-open-route {
+      justify-self: start;
+      min-height: 42px;
+      margin-top: 2px;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--picker-accent, #0f6b5a);
+      color: #fffdf7;
+      cursor: pointer;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 820;
+      transition: filter 150ms ease, transform 150ms ease;
+    }
+
+    .picker-open-route:hover,
+    .picker-open-route:focus-visible {
+      filter: brightness(0.94);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .entry-pathway {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: 24px;
+      margin-top: 34px;
+      padding: 24px;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255, 253, 247, 0.94), rgba(237, 243, 237, 0.94)),
+        #fffdf7;
+    }
+
+    .entry-pathway h2,
+    .entry-guide h2 {
+      margin: 0;
+      color: #14352f;
+      font-size: 30px;
+      line-height: 1.2;
+    }
+
+    .entry-pathway p,
+    .entry-guide p {
+      margin: 12px 0 0;
+      color: #53655f;
+      line-height: 1.68;
+    }
+
+    .entry-clues,
+    .entry-guide-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .entry-clues {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .entry-clue,
+    .entry-guide-item {
+      min-width: 0;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.78);
+    }
+
+    .entry-clue {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      column-gap: 12px;
+      align-content: start;
+      padding: 14px;
+    }
+
+    .entry-clue span {
+      display: inline-flex;
+      width: 34px;
+      height: 28px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #17342f;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 850;
+      grid-row: span 2;
+    }
+
+    .entry-clue strong {
+      display: block;
+      margin-top: 0;
+      color: #17342f;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+
+    .entry-clue p {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.58;
+    }
+
+    .entry-guide {
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+      gap: 24px;
+      margin-top: 18px;
+      padding: 22px 24px;
+      border: 1px solid rgba(22, 52, 47, 0.1);
+      border-radius: 8px;
+      background: #17342f;
+    }
+
+    .entry-guide-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-content: center;
+    }
+
+    .entry-guide-item {
+      display: grid;
+      gap: 8px;
+      padding: 13px 14px;
+      border-left: 5px solid var(--guide-accent, #0f6b5a);
+      background: rgba(255, 253, 247, 0.97);
+    }
+
+    .entry-guide .entry-section-kicker {
+      color: #d7b58c;
+    }
+
+    .entry-guide h2 {
+      color: #fffdf7;
+    }
+
+    .entry-guide p {
+      color: rgba(255, 253, 247, 0.76);
+    }
+
+    .entry-guide-item strong {
+      color: #17342f;
+      font-size: 16px;
+      line-height: 1.3;
+    }
+
+    .entry-guide-item span {
+      color: #64726d;
+      font-size: 13px;
+      line-height: 1.55;
     }
 
     .layout {
@@ -349,12 +927,24 @@
     }
 
     .fallback-map {
+      display: none;
       z-index: 0;
       background:
         linear-gradient(90deg, rgba(112, 139, 126, 0.14), transparent 1px),
         linear-gradient(0deg, rgba(112, 139, 126, 0.12), transparent 1px),
         #e9eee5;
       background-size: 42px 42px;
+    }
+
+    .route-svg,
+    #pins {
+      display: none;
+    }
+
+    .map-panel.fallback-ready .fallback-map,
+    .map-panel.fallback-ready .route-svg,
+    .map-panel.fallback-ready #pins {
+      display: block;
     }
 
     .map-panel.leaflet-ready .fallback-map,
@@ -577,6 +1167,28 @@
       box-shadow: 0 14px 28px rgba(26, 43, 37, 0.36);
     }
 
+    .leaflet-start-marker {
+      display: grid;
+      place-items: center;
+      background: transparent;
+      border: 0;
+    }
+
+    .leaflet-start-pin {
+      display: grid;
+      width: 36px;
+      height: 36px;
+      place-items: center;
+      border: 3px solid #fffdf7;
+      border-radius: 50%;
+      background: #a33f3f;
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(26, 43, 37, 0.32);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
     .leaflet-tooltip.leaflet-spot-label {
       min-width: 74px;
       max-width: 190px;
@@ -598,6 +1210,47 @@
     .leaflet-tooltip.leaflet-spot-label.is-active {
       border-color: var(--accent);
       box-shadow: 0 12px 28px rgba(30, 48, 42, 0.2);
+    }
+
+    .route-legend {
+      position: absolute;
+      right: 22px;
+      bottom: 22px;
+      z-index: 4;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding: 9px 10px;
+      border: 1px solid rgba(22, 52, 47, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.96);
+      box-shadow: 0 12px 28px rgba(30, 48, 42, 0.12);
+      color: #314841;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .route-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .route-legend-line {
+      width: 28px;
+      height: 0;
+      border-top: 4px solid #0f6b5a;
+      border-radius: 999px;
+    }
+
+    .route-legend-line.walk {
+      border-top-style: dashed;
+      border-color: #0f6b5a;
+    }
+
+    .route-legend-line.drive {
+      border-color: #286c8f;
     }
 
     .map-label {
@@ -800,6 +1453,160 @@
       color: #465650;
       font-size: 14px;
       line-height: 1.65;
+    }
+
+    .route-mode-summary {
+      margin: 14px 18px 0;
+    }
+
+    .segment-list {
+      display: grid;
+      gap: 8px;
+      margin: 16px 18px 0;
+    }
+
+    .segment-item {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 11px;
+      border: 1px solid rgba(22, 52, 47, 0.08);
+      border-radius: 8px;
+      background: #f7f4eb;
+      color: #42524c;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .segment-mode {
+      display: inline-flex;
+      min-width: 42px;
+      height: 24px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 850;
+    }
+
+    .segment-mode.walk {
+      background: #0f6b5a;
+    }
+
+    .segment-mode.drive {
+      background: #286c8f;
+    }
+
+    .segment-name {
+      min-width: 0;
+      overflow: hidden;
+      color: #18352f;
+      font-weight: 780;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .segment-distance {
+      color: #6e7a74;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+
+    .start-card {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid rgba(22, 52, 47, 0.09);
+      border-left: 6px solid #a33f3f;
+      border-radius: 8px;
+      background: #fffdf7;
+      box-shadow: 0 12px 26px rgba(30, 48, 42, 0.06);
+    }
+
+    .start-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .start-kicker {
+      color: #8a5738;
+      font-size: 13px;
+      font-weight: 830;
+    }
+
+    .start-status {
+      flex: 0 0 auto;
+      padding: 5px 8px;
+      border-radius: 8px;
+      background: rgba(22, 52, 47, 0.06);
+      color: #4b5a55;
+      font-size: 12px;
+      font-weight: 780;
+    }
+
+    .start-name {
+      color: #14352f;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .start-note {
+      margin: 0;
+      color: #53655f;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .start-actions,
+    .start-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .start-button,
+    .start-preset {
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid rgba(22, 52, 47, 0.14);
+      border-radius: 8px;
+      background: #fff;
+      color: #17342f;
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 780;
+      line-height: 1.2;
+      transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+    }
+
+    .start-button.primary {
+      border-color: #a33f3f;
+      background: #a33f3f;
+      color: #fff;
+    }
+
+    .start-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    .start-button:hover:not(:disabled),
+    .start-button:focus-visible,
+    .start-preset:hover,
+    .start-preset:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    .start-preset.is-active {
+      border-color: var(--accent);
+      background: color-mix(in srgb, var(--accent), #ffffff 88%);
+      color: var(--accent);
     }
 
     .spot-card {
@@ -1006,6 +1813,13 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .entry-pathway,
+      .mascot-band,
+      .route-picker-layout,
+      .entry-guide {
+        grid-template-columns: 1fr;
+      }
+
       .map-panel {
         height: 520px;
         min-height: 520px;
@@ -1028,7 +1842,7 @@
 
       .entry-hero,
       .entry-hero-content {
-        min-height: 560px;
+        min-height: 590px;
       }
 
       .entry-hero-content,
@@ -1038,12 +1852,64 @@
       }
 
       .entry-title {
-        font-size: 40px;
+        font-size: 36px;
       }
 
       .entry-routes,
       .entry-stats {
         grid-template-columns: 1fr;
+      }
+
+      .entry-route-card {
+        grid-template-columns: 1fr;
+        min-height: 0;
+      }
+
+      .entry-route-card img {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+      }
+
+      .entry-clues,
+      .entry-guide-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mascot-band {
+        gap: 18px;
+        padding: 18px;
+      }
+
+      .mascot-visual {
+        min-height: 214px;
+      }
+
+      .mascot-copy h2 {
+        font-size: 26px;
+      }
+
+      .route-picker {
+        padding: 18px;
+      }
+
+      .route-picker-head {
+        display: grid;
+      }
+
+      .picker-result {
+        grid-template-columns: 1fr;
+      }
+
+      .picker-result img {
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+      }
+
+      .entry-pathway,
+      .entry-guide {
+        gap: 18px;
+        padding: 18px;
       }
 
       .map-panel {
@@ -1101,7 +1967,7 @@
               <span>条路线</span>
             </div>
             <div class="entry-stat">
-              <strong>17</strong>
+              <strong>25</strong>
               <span>个点位</span>
             </div>
             <div class="entry-stat">
@@ -1116,10 +1982,146 @@
         <div class="entry-heading">
           <div>
             <h2>路线总览</h2>
-            <p>先选主题，再进入地图和站点详情。</p>
+            <p>按旅行时间、空间线索和兴趣主题选择路线，再进入地图查看站点详情。</p>
           </div>
         </div>
         <div class="entry-routes" id="entryRoutes"></div>
+
+        <section class="mascot-band" aria-labelledby="mascotTitle">
+          <div class="mascot-visual">
+            <img src="./assets/mascot-qiaopi.svg" alt="侨批小信使批批，圆润大头小身，抱着带红批印章的侨批信封">
+          </div>
+          <div class="mascot-copy">
+            <span class="entry-section-kicker">文化吉祥物</span>
+            <h2 id="mascotTitle">侨批小信使「批批」</h2>
+            <p>它是一位圆润的 Q 版侨批小信使，用旧纸米黄、朱红印章、墨绿和褐色邮路组成，怀里抱着带红色“批”印章的侨批信封，把远方的家书送回侨乡。</p>
+            <div class="mascot-traits" aria-label="吉祥物元素">
+              <span>圆润 Q 版</span>
+              <span>红批印章</span>
+              <span>侨批色调</span>
+              <span>侨批信封</span>
+            </div>
+            <div class="mascot-motto">一封家书，一路乡音。</div>
+          </div>
+        </section>
+
+        <section class="route-picker" aria-labelledby="routePickerTitle" id="routePicker">
+          <div class="route-picker-head">
+            <div>
+              <span class="entry-section-kicker">互动选择</span>
+              <h2 id="routePickerTitle">路线助手</h2>
+            </div>
+            <div class="route-picker-badge" id="pickerMatch">推荐路线</div>
+          </div>
+          <div class="route-picker-layout">
+            <div class="picker-controls" id="routePickerControls">
+              <div class="picker-group">
+                <span class="picker-label">时间</span>
+                <div class="picker-options">
+                  <button class="picker-option is-active" type="button" data-picker="time" data-value="half">半日</button>
+                  <button class="picker-option" type="button" data-picker="time" data-value="day">1 日</button>
+                  <button class="picker-option" type="button" data-picker="time" data-value="two">2 日</button>
+                </div>
+              </div>
+              <div class="picker-group">
+                <span class="picker-label">交通</span>
+                <div class="picker-options">
+                  <button class="picker-option is-active" type="button" data-picker="transport" data-value="walk">步行为主</button>
+                  <button class="picker-option" type="button" data-picker="transport" data-value="drive">可自驾</button>
+                  <button class="picker-option" type="button" data-picker="transport" data-value="cross">跨城</button>
+                </div>
+              </div>
+              <div class="picker-group">
+                <span class="picker-label">兴趣</span>
+                <div class="picker-options">
+                  <button class="picker-option is-active" type="button" data-picker="interest" data-value="archive">展馆档案</button>
+                  <button class="picker-option" type="button" data-picker="interest" data-value="port">古港侨乡</button>
+                  <button class="picker-option" type="button" data-picker="interest" data-value="study">亲子研学</button>
+                  <button class="picker-option" type="button" data-picker="interest" data-value="minnan">闽南跨城</button>
+                </div>
+              </div>
+            </div>
+            <article class="picker-result" id="pickerResult">
+              <img id="pickerCover" alt="">
+              <div class="picker-result-body">
+                <div class="picker-result-top">
+                  <span class="picker-route-short" id="pickerRouteShort"></span>
+                  <span class="picker-score" id="pickerScore"></span>
+                </div>
+                <h3 id="pickerRouteName"></h3>
+                <p class="picker-reason" id="pickerReason"></p>
+                <div class="picker-mini-metrics">
+                  <div class="picker-mini-metric">
+                    <span>时间</span>
+                    <strong id="pickerDuration"></strong>
+                  </div>
+                  <div class="picker-mini-metric">
+                    <span>距离</span>
+                    <strong id="pickerDistance"></strong>
+                  </div>
+                  <div class="picker-mini-metric">
+                    <span>交通</span>
+                    <strong id="pickerTransport"></strong>
+                  </div>
+                </div>
+                <div class="route-mode-summary" id="pickerRouteModes"></div>
+                <div class="picker-spots" id="pickerSpots"></div>
+                <button class="picker-open-route" id="pickerOpenRoute" type="button">进入推荐路线</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="entry-pathway" aria-labelledby="entryPathwayTitle">
+          <div>
+            <span class="entry-section-kicker">旅行线索</span>
+            <h2 id="entryPathwayTitle">把一封侨批，走成一条路</h2>
+            <p>侨批不是只在展柜里的文献。它连接寄信人、批局、港口、家族宅院和回乡建设，适合用“读信、看城、进侨乡”的方式慢慢展开。</p>
+          </div>
+          <div class="entry-clues">
+            <article class="entry-clue">
+              <span>01</span>
+              <strong>读家书与汇款</strong>
+              <p>在展馆里看信封、批脚、银信凭据，先理解侨批如何跨洋到达家乡。</p>
+            </article>
+            <article class="entry-clue">
+              <span>02</span>
+              <strong>走开埠街区</strong>
+              <p>沿老城、邮政旧址和海岸线，把通信网络放回真实的港口城市里。</p>
+            </article>
+            <article class="entry-clue">
+              <span>03</span>
+              <strong>进古村侨宅</strong>
+              <p>到侨乡看祠堂、宅第和古港，观察侨汇如何进入地方生活与建设。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="entry-guide" aria-labelledby="entryGuideTitle">
+          <div>
+            <span class="entry-section-kicker">出行建议</span>
+            <h2 id="entryGuideTitle">先老城，再进侨乡</h2>
+            <p>第一次游览建议从汕头老城半日线开始；如果有一整天或两天，再把路线延伸到澄海侨乡、泉州、厦门和漳州。</p>
+          </div>
+          <div class="entry-guide-grid">
+            <article class="entry-guide-item" style="--guide-accent: #0f6b5a;">
+              <strong>半日城市漫游</strong>
+              <span>适合第一次了解侨批，从小公园、侨批文物馆走到西堤海岸。</span>
+            </article>
+            <article class="entry-guide-item" style="--guide-accent: #8a5738;">
+              <strong>一日侨乡寻访</strong>
+              <span>适合自驾或小团，从城市出海口连接古村、侨宅和古港。</span>
+            </article>
+            <article class="entry-guide-item" style="--guide-accent: #a33f3f;">
+              <strong>亲子研学深度游</strong>
+              <span>适合带任务单慢慢看，从一封家书追踪地址、人物和汇款路径。</span>
+            </article>
+            <article class="entry-guide-item" style="--guide-accent: #286c8f;">
+              <strong>闽南跨城线路</strong>
+              <span>适合两日以上，把泉州批馆、厦门旧信局和漳州天一总局串起来。</span>
+            </article>
+          </div>
+        </section>
       </section>
     </main>
 
@@ -1179,6 +2181,10 @@
           <strong id="mapRouteName"></strong>
           <span id="mapRouteTheme"></span>
         </div>
+        <div class="route-legend" aria-label="路线类型说明">
+          <span class="route-legend-item"><span class="route-legend-line walk"></span>步行段</span>
+          <span class="route-legend-item"><span class="route-legend-line drive"></span>车行段</span>
+        </div>
         <div id="pins"></div>
       </section>
 
@@ -1205,6 +2211,22 @@
             </div>
           </div>
           <p class="summary" id="routeSummary"></p>
+          <div class="route-mode-summary" id="routeModeSummary"></div>
+          <div class="segment-list" id="routeSegments"></div>
+        </section>
+
+        <section class="start-card" id="startCard" aria-labelledby="startCardTitle">
+          <div class="start-card-head">
+            <span class="start-kicker" id="startCardTitle">出发位置</span>
+            <span class="start-status" id="startStatus">未设置</span>
+          </div>
+          <strong class="start-name" id="startName">未选择出发点</strong>
+          <p class="start-note" id="startNote">可以定位当前位置，也可以选择常用出发点；设置后“地图导航”会从这里出发到当前站点。</p>
+          <div class="start-actions">
+            <button class="start-button primary" id="locateStart" type="button">定位当前位置</button>
+            <button class="start-button" id="clearStart" type="button">清除出发点</button>
+          </div>
+          <div class="start-presets" id="startPresets" aria-label="常用出发点"></div>
         </section>
 
         <section class="spot-card" id="spotCard">
@@ -1243,10 +2265,32 @@
       routeView: document.querySelector('#routeView'),
       entryHeroImage: document.querySelector('#entryHeroImage'),
       entryRoutes: document.querySelector('#entryRoutes'),
+      routePicker: document.querySelector('#routePicker'),
+      routePickerControls: document.querySelector('#routePickerControls'),
+      pickerResult: document.querySelector('#pickerResult'),
+      pickerMatch: document.querySelector('#pickerMatch'),
+      pickerCover: document.querySelector('#pickerCover'),
+      pickerRouteShort: document.querySelector('#pickerRouteShort'),
+      pickerScore: document.querySelector('#pickerScore'),
+      pickerRouteName: document.querySelector('#pickerRouteName'),
+      pickerReason: document.querySelector('#pickerReason'),
+      pickerDuration: document.querySelector('#pickerDuration'),
+      pickerDistance: document.querySelector('#pickerDistance'),
+      pickerTransport: document.querySelector('#pickerTransport'),
+      pickerRouteModes: document.querySelector('#pickerRouteModes'),
+      pickerSpots: document.querySelector('#pickerSpots'),
+      pickerOpenRoute: document.querySelector('#pickerOpenRoute'),
       mapPanel: document.querySelector('#mapPanel'),
       leafletMap: document.querySelector('#leafletMap'),
       tabs: document.querySelector('#tabs'),
       routePanel: document.querySelector('#routePanel'),
+      startCard: document.querySelector('#startCard'),
+      startStatus: document.querySelector('#startStatus'),
+      startName: document.querySelector('#startName'),
+      startNote: document.querySelector('#startNote'),
+      locateStart: document.querySelector('#locateStart'),
+      clearStart: document.querySelector('#clearStart'),
+      startPresets: document.querySelector('#startPresets'),
       spotCard: document.querySelector('#spotCard'),
       routeHalo: document.querySelector('#routeHalo'),
       routeLine: document.querySelector('#routeLine'),
@@ -1264,6 +2308,8 @@
       routeDistance: document.querySelector('#routeDistance'),
       routeTransport: document.querySelector('#routeTransport'),
       routeSummary: document.querySelector('#routeSummary'),
+      routeModeSummary: document.querySelector('#routeModeSummary'),
+      routeSegments: document.querySelector('#routeSegments'),
       spotOrder: document.querySelector('#spotOrder'),
       spotCategory: document.querySelector('#spotCategory'),
       spotName: document.querySelector('#spotName'),
@@ -1279,6 +2325,21 @@
     let leafletLayer = null
     let pendingLeafletRoute = null
     let leafletRenderQueued = false
+    const routePickerState = {
+      time: 'half',
+      transport: 'walk',
+      interest: 'archive'
+    }
+    const startPresetPoints = [
+      { id: 'route-first', name: '本路线首站', dynamic: true },
+      { id: 'shantou-station', name: '汕头站', latitude: 23.3746875, longitude: 116.7524295 },
+      { id: 'chaoshan-airport', name: '揭阳潮汕机场', latitude: 23.5531376, longitude: 116.5084309 },
+      { id: 'quanzhou-station', name: '泉州站', latitude: 24.9759459, longitude: 118.5632413 },
+      { id: 'xiamen-north-station', name: '厦门北站', latitude: 24.6400179, longitude: 118.0683222 },
+      { id: 'zhangzhou-station', name: '漳州站', latitude: 24.4592096, longitude: 117.7109062 }
+    ]
+    let activeStartPoint = readStoredStartPoint()
+    let startPointMessage = ''
 
     function escapeHtml(value) {
       return String(value)
@@ -1295,6 +2356,261 @@
       elements.routeView.hidden = !hasEntered
     }
 
+    function getModeCounts(route) {
+      return (route.segmentModes || []).reduce((counts, mode) => {
+        counts[mode] = (counts[mode] || 0) + 1
+        return counts
+      }, { walk: 0, drive: 0 })
+    }
+
+    function renderModePills(route) {
+      const counts = getModeCounts(route)
+      const pills = []
+      if (counts.walk) {
+        pills.push(`<span class="route-mode-pill walk">步行 ${counts.walk} 段</span>`)
+      }
+      if (counts.drive) {
+        pills.push(`<span class="route-mode-pill drive">车行 ${counts.drive} 段</span>`)
+      }
+      return pills.join('')
+    }
+
+    function readStoredStartPoint() {
+      const stores = []
+      try {
+        stores.push(sessionStorage)
+      } catch (error) {
+        // Storage may be unavailable in some embedded browser contexts.
+      }
+      try {
+        stores.push(localStorage)
+      } catch (error) {
+        // Storage may be unavailable in some embedded browser contexts.
+      }
+      for (const store of stores) {
+        try {
+          const raw = store.getItem('qiaopiStartPoint')
+          if (!raw) continue
+          const point = JSON.parse(raw)
+          if (point?.presetId || (Number.isFinite(point?.latitude) && Number.isFinite(point?.longitude))) {
+            return point
+          }
+        } catch (error) {
+          continue
+        }
+      }
+      return null
+    }
+
+    function persistStartPoint() {
+      try {
+        sessionStorage.removeItem('qiaopiStartPoint')
+        localStorage.removeItem('qiaopiStartPoint')
+        if (!activeStartPoint) return
+        const targetStore = activeStartPoint.source === '定位' ? sessionStorage : localStorage
+        targetStore.setItem('qiaopiStartPoint', JSON.stringify(activeStartPoint))
+      } catch (error) {
+        // Storage may be unavailable in some embedded browser contexts.
+      }
+    }
+
+    function buildRouteFirstStartPoint() {
+      const route = routes[activeRouteIndex]
+      const firstSpot = route?.spots?.[0]
+      if (!firstSpot) return null
+      return {
+        id: `route-first-${route.id}`,
+        presetId: 'route-first',
+        name: `本路线首站：${firstSpot.name}`,
+        latitude: firstSpot.latitude,
+        longitude: firstSpot.longitude,
+        source: '常用点'
+      }
+    }
+
+    function getEffectiveStartPoint() {
+      if (!activeStartPoint) return null
+      if (activeStartPoint.presetId === 'route-first') {
+        return buildRouteFirstStartPoint()
+      }
+      return activeStartPoint
+    }
+
+    function setActiveStartPoint(point) {
+      activeStartPoint = point
+      startPointMessage = ''
+      persistStartPoint()
+      render()
+    }
+
+    function renderStartPoint() {
+      if (!elements.startPresets) return
+
+      const startPoint = getEffectiveStartPoint()
+      const activePresetId = activeStartPoint?.presetId || activeStartPoint?.id || ''
+
+      elements.startPresets.innerHTML = startPresetPoints.map((preset) => `
+        <button class="start-preset ${activePresetId === preset.id ? 'is-active' : ''}" type="button" data-start-preset="${preset.id}">
+          ${escapeHtml(preset.name)}
+        </button>
+      `).join('')
+
+      elements.clearStart.disabled = !activeStartPoint
+
+      if (!startPoint) {
+        elements.startStatus.textContent = '未设置'
+        elements.startName.textContent = '未选择出发点'
+        elements.startNote.textContent = startPointMessage || '可以定位当前位置，也可以选择常用出发点；设置后“地图导航”会从这里出发到当前站点。'
+        return
+      }
+
+      const accuracyText = startPoint.accuracy ? `定位精度约 ${Math.round(startPoint.accuracy)} 米。` : ''
+      elements.startStatus.textContent = startPoint.source || '已设置'
+      elements.startName.textContent = startPoint.name
+      elements.startNote.textContent = startPointMessage || `${accuracyText}地图导航会从这个出发点前往当前选中的站点。`
+    }
+
+    const routePickerLabels = {
+      time: {
+        half: '半日',
+        day: '1 日',
+        two: '2 日'
+      },
+      transport: {
+        walk: '步行为主',
+        drive: '可自驾',
+        cross: '跨城'
+      },
+      interest: {
+        archive: '展馆档案',
+        port: '古港侨乡',
+        study: '亲子研学',
+        minnan: '闽南跨城'
+      }
+    }
+
+    const routePickerProfiles = [
+      {
+        id: 'old-town',
+        time: ['half'],
+        transport: ['walk'],
+        interest: ['archive', 'study'],
+        reason: '站点集中在汕头老城，适合先看侨批文物、邮政旧址和开埠街区。'
+      },
+      {
+        id: 'village-port',
+        time: ['day'],
+        transport: ['drive'],
+        interest: ['port'],
+        reason: '路线从出海口延伸到澄海侨乡，能把古港、侨宅和村落线索连起来。'
+      },
+      {
+        id: 'family-letter',
+        time: ['two'],
+        transport: ['drive', 'walk'],
+        interest: ['study', 'archive', 'port'],
+        reason: '节奏更适合慢读家书、看展馆，再进入侨乡寻找地址和家族故事。'
+      },
+      {
+        id: 'minnan-network',
+        time: ['two'],
+        transport: ['cross', 'drive'],
+        interest: ['minnan', 'archive'],
+        reason: '它串联泉州、厦门和漳州，适合把侨批放到闽南跨城网络里看。'
+      }
+    ]
+
+    function scorePickerProfile(profile) {
+      let score = 0
+      const { time, transport, interest } = routePickerState
+
+      if (profile.time.includes(time)) {
+        score += 42
+      } else if (time === 'two' && profile.time.includes('day')) {
+        score += 14
+      } else if (time === 'day' && profile.time.includes('half')) {
+        score += 16
+      }
+
+      if (profile.transport.includes(transport)) {
+        score += 32
+      } else if (transport === 'drive' && profile.transport.includes('cross')) {
+        score += 12
+      } else if (transport === 'cross' && profile.transport.includes('drive')) {
+        score += 10
+      }
+
+      if (profile.interest.includes(interest)) {
+        score += 26
+      } else if (interest === 'archive' && profile.interest.includes('study')) {
+        score += 10
+      }
+
+      return score
+    }
+
+    function getPickerRecommendation() {
+      const scored = routePickerProfiles.map((profile, order) => {
+        const routeIndex = routes.findIndex((route) => route.id === profile.id)
+        return {
+          profile,
+          routeIndex,
+          route: routes[routeIndex],
+          score: scorePickerProfile(profile),
+          order
+        }
+      }).filter((item) => item.route)
+
+      scored.sort((a, b) => b.score - a.score || a.order - b.order)
+      return scored[0] || {
+        route: routes[0],
+        routeIndex: 0,
+        profile: { reason: routes[0]?.summary || '' },
+        score: 0
+      }
+    }
+
+    function renderRoutePicker() {
+      if (!elements.routePickerControls || !routes.length) return
+
+      const recommendation = getPickerRecommendation()
+      const { route, routeIndex, profile, score } = recommendation
+      const accent = route.accent || '#0f6b5a'
+      const labels = routePickerLabels
+      const visibleScore = Math.max(58, score)
+      const leadingSpots = route.spots.slice(0, 4)
+      const extraCount = route.spots.length - leadingSpots.length
+      const spotPreview = leadingSpots.map((spot, index) => `
+        <span><b>${index + 1}</b>${escapeHtml(spot.name)}</span>
+      `)
+
+      if (extraCount > 0) {
+        spotPreview.push(`<span><b>+</b>还有 ${extraCount} 站</span>`)
+      }
+
+      elements.routePicker.style.setProperty('--picker-accent', accent)
+      elements.pickerResult.style.setProperty('--picker-accent', accent)
+      elements.pickerCover.src = route.cover
+      elements.pickerCover.alt = `${route.name}封面`
+      elements.pickerRouteShort.textContent = route.shortName
+      elements.pickerScore.textContent = `匹配 ${visibleScore}%`
+      elements.pickerMatch.textContent = `${route.spots.length} 个点位`
+      elements.pickerRouteName.textContent = route.name
+      elements.pickerReason.textContent = `选择${labels.time[routePickerState.time]}、${labels.transport[routePickerState.transport]}、${labels.interest[routePickerState.interest]}，推荐先走“${route.shortName}”。${profile.reason}`
+      elements.pickerDuration.textContent = route.duration
+      elements.pickerDistance.textContent = route.distance
+      elements.pickerTransport.textContent = route.transport
+      elements.pickerRouteModes.innerHTML = renderModePills(route)
+      elements.pickerSpots.innerHTML = spotPreview.join('')
+      elements.pickerOpenRoute.dataset.route = String(routeIndex)
+
+      elements.routePickerControls.querySelectorAll('[data-picker]').forEach((button) => {
+        const active = routePickerState[button.dataset.picker] === button.dataset.value
+        button.classList.toggle('is-active', active)
+        button.setAttribute('aria-pressed', active ? 'true' : 'false')
+      })
+    }
+
     function renderEntry() {
       const heroRoute = routes[0]
       if (!heroRoute) return
@@ -1309,14 +2625,16 @@
             <span class="entry-route-body">
               <span class="entry-route-meta">
                 <span class="entry-route-badge">${escapeHtml(route.shortName)}</span>
-                <span>${escapeHtml(route.duration)} · ${escapeHtml(route.distance)}</span>
+                <span class="entry-route-duration">${escapeHtml(route.duration)} · ${escapeHtml(route.distance)}</span>
               </span>
               <span class="entry-route-name">${escapeHtml(route.name)}</span>
               <span class="entry-route-theme">${escapeHtml(route.theme)}</span>
+              <span class="entry-route-modes">${renderModePills(route)}</span>
               <span class="entry-route-summary">${escapeHtml(route.summary)}</span>
               <span class="entry-route-bottom">
-                <span>${escapeHtml(firstSpots)}</span>
-                <span class="entry-route-action">进入路线 ›</span>
+                <span class="entry-route-spots-label">核心点位</span>
+                <span class="entry-route-spots">${escapeHtml(firstSpots)}</span>
+                <span class="entry-route-action">查看地图路线 ›</span>
               </span>
             </span>
           </button>
@@ -1333,13 +2651,123 @@
       requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'smooth' }))
     }
 
+    const segmentStyles = {
+      walk: {
+        label: '步行',
+        navMode: 'walk',
+        color: '#0f6b5a',
+        dashArray: '7 9'
+      },
+      drive: {
+        label: '驾车',
+        navMode: 'car',
+        color: '#286c8f',
+        dashArray: null
+      }
+    }
+
+    function estimateKm(a, b) {
+      const earthRadius = 6371
+      const toRadians = (value) => value * Math.PI / 180
+      const dLat = toRadians(b.latitude - a.latitude)
+      const dLon = toRadians(b.longitude - a.longitude)
+      const lat1 = toRadians(a.latitude)
+      const lat2 = toRadians(b.latitude)
+      const h = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2
+      return 2 * earthRadius * Math.asin(Math.sqrt(h))
+    }
+
+    function transformLat(x, y) {
+      let value = -100 + 2 * x + 3 * y + 0.2 * y * y + 0.1 * x * y + 0.2 * Math.sqrt(Math.abs(x))
+      value += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3
+      value += (20 * Math.sin(y * Math.PI) + 40 * Math.sin(y / 3 * Math.PI)) * 2 / 3
+      value += (160 * Math.sin(y / 12 * Math.PI) + 320 * Math.sin(y * Math.PI / 30)) * 2 / 3
+      return value
+    }
+
+    function transformLon(x, y) {
+      let value = 300 + x + 2 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * Math.sqrt(Math.abs(x))
+      value += (20 * Math.sin(6 * x * Math.PI) + 20 * Math.sin(2 * x * Math.PI)) * 2 / 3
+      value += (20 * Math.sin(x * Math.PI) + 40 * Math.sin(x / 3 * Math.PI)) * 2 / 3
+      value += (150 * Math.sin(x / 12 * Math.PI) + 300 * Math.sin(x / 30 * Math.PI)) * 2 / 3
+      return value
+    }
+
+    function toAmapCoordinate(point) {
+      const lat = point.latitude
+      const lon = point.longitude
+      const a = 6378245
+      const ee = 0.006693421622965943
+      let dLat = transformLat(lon - 105, lat - 35)
+      let dLon = transformLon(lon - 105, lat - 35)
+      let radLat = lat / 180 * Math.PI
+      let magic = Math.sin(radLat)
+      magic = 1 - ee * magic * magic
+      const sqrtMagic = Math.sqrt(magic)
+      dLat = (dLat * 180) / ((a * (1 - ee)) / (magic * sqrtMagic) * Math.PI)
+      dLon = (dLon * 180) / (a / sqrtMagic * Math.cos(radLat) * Math.PI)
+      return {
+        latitude: Number((lat + dLat).toFixed(6)),
+        longitude: Number((lon + dLon).toFixed(6))
+      }
+    }
+
+    function getStartNavigationStyle(startPoint, spot) {
+      const distance = estimateKm(startPoint, spot)
+      return distance <= 2.5 ? segmentStyles.walk : segmentStyles.drive
+    }
+
+    function buildAmapNavigationUrl(fromPoint, toPoint, style) {
+      const fromAmap = toAmapCoordinate(fromPoint)
+      const toAmap = toAmapCoordinate(toPoint)
+      return `https://uri.amap.com/navigation?from=${fromAmap.longitude},${fromAmap.latitude},${encodeURIComponent(fromPoint.name)}&to=${toAmap.longitude},${toAmap.latitude},${encodeURIComponent(toPoint.name)}&mode=${style.navMode}&policy=1&src=qiaopi-route&callnative=0`
+    }
+
+    function buildAmapMarkerUrl(point) {
+      const pointAmap = toAmapCoordinate(point)
+      return `https://uri.amap.com/marker?position=${pointAmap.longitude},${pointAmap.latitude}&name=${encodeURIComponent(point.name)}`
+    }
+
+    function getSegmentMode(route, index) {
+      return route.segmentModes?.[index] || 'walk'
+    }
+
+    function getRouteSegments(route) {
+      return route.spots.slice(0, -1).map((from, index) => {
+        const to = route.spots[index + 1]
+        const mode = getSegmentMode(route, index)
+        const style = segmentStyles[mode] || segmentStyles.walk
+        const path = route.segmentPaths?.[index] || []
+        return {
+          from,
+          to,
+          mode,
+          style,
+          path,
+          distance: route.segmentDistances?.[index] || estimateKm(from, to)
+        }
+      })
+    }
+
+    function getRoutePathLatLngs(route) {
+      const routedPoints = getRouteSegments(route).flatMap((segment, index) => {
+        if (segment.path.length < 2) return []
+        return index === 0 ? segment.path : segment.path.slice(1)
+      })
+      if (routedPoints.length) return routedPoints
+      return route.spots.map((spot) => [spot.latitude, spot.longitude])
+    }
+
     function ensureLeafletMap() {
       if (leafletMap) {
+        elements.mapPanel.classList.add('leaflet-ready')
+        elements.mapPanel.classList.remove('fallback-ready')
         return true
       }
 
       if (!window.L || !elements.leafletMap) {
         elements.mapPanel.classList.remove('leaflet-ready')
+        elements.mapPanel.classList.add('fallback-ready')
         return false
       }
 
@@ -1354,14 +2782,14 @@
         position: 'bottomright'
       }).addTo(leafletMap)
 
-      L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', {
-        maxZoom: 18,
-        subdomains: ['1', '2', '3', '4'],
-        attribution: '&copy; 高德地图'
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
       }).addTo(leafletMap)
 
       leafletLayer = L.layerGroup().addTo(leafletMap)
       elements.mapPanel.classList.add('leaflet-ready')
+      elements.mapPanel.classList.remove('fallback-ready')
       setTimeout(() => leafletMap.invalidateSize(), 0)
       return true
     }
@@ -1372,23 +2800,35 @@
       }
 
       leafletLayer.clearLayers()
-      const coordinates = route.spots.map((item) => [item.latitude, item.longitude])
+      const routeSegments = getRouteSegments(route)
+      const coordinates = getRoutePathLatLngs(route)
 
-      L.polyline(coordinates, {
-        color: '#fff7e6',
-        weight: 10,
-        opacity: 0.92,
-        lineCap: 'round',
-        lineJoin: 'round'
-      }).addTo(leafletLayer)
+      routeSegments.forEach((segment, index) => {
+        if (segment.path.length < 2) return
 
-      L.polyline(coordinates, {
-        color: route.accent,
-        weight: 5,
-        opacity: 0.96,
-        lineCap: 'round',
-        lineJoin: 'round'
-      }).addTo(leafletLayer)
+        L.polyline(segment.path, {
+          color: '#fff7e6',
+          weight: segment.mode === 'drive' ? 12 : 10,
+          opacity: 0.9,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(leafletLayer)
+
+        const line = L.polyline(segment.path, {
+          color: segment.style.color,
+          weight: segment.mode === 'drive' ? 5.5 : 4.5,
+          opacity: 0.96,
+          dashArray: segment.style.dashArray,
+          lineCap: 'round',
+          lineJoin: 'round'
+        }).addTo(leafletLayer)
+
+        line.bindTooltip(`${index + 1}. ${segment.style.label}：${escapeHtml(segment.from.name)} → ${escapeHtml(segment.to.name)}`, {
+          sticky: true,
+          className: 'leaflet-spot-label',
+          opacity: 0.95
+        })
+      })
 
       route.spots.forEach((item, index) => {
         const active = index === activeSpotIndex
@@ -1428,7 +2868,36 @@
         })
       })
 
-      const bounds = L.latLngBounds(coordinates)
+      const fitCoordinates = coordinates.slice()
+      const startPoint = getEffectiveStartPoint()
+      if (startPoint) {
+        const startIcon = L.divIcon({
+          className: 'leaflet-start-marker',
+          html: '<span class="leaflet-start-pin">起</span>',
+          iconSize: [36, 36],
+          iconAnchor: [18, 18]
+        })
+        const startMarker = L.marker([startPoint.latitude, startPoint.longitude], {
+          icon: startIcon,
+          keyboard: true,
+          title: `出发点：${startPoint.name}`
+        }).addTo(leafletLayer)
+
+        startMarker.bindTooltip(`出发点：${escapeHtml(startPoint.name)}`, {
+          permanent: false,
+          direction: 'top',
+          offset: [0, -20],
+          className: 'leaflet-spot-label',
+          opacity: 0.95
+        })
+
+        const nearestSpotDistance = Math.min(...route.spots.map((item) => estimateKm(startPoint, item)))
+        if (nearestSpotDistance <= 80) {
+          fitCoordinates.push([startPoint.latitude, startPoint.longitude])
+        }
+      }
+
+      const bounds = L.latLngBounds(fitCoordinates)
       const paddingTopLeft = window.innerWidth <= 560 ? [18, 92] : [28, 92]
       leafletMap.fitBounds(bounds.pad(0.28), {
         animate: false,
@@ -1461,9 +2930,10 @@
       }
     }
 
-    function projectPoints(route) {
-      const longitudes = route.spots.map((spot) => spot.longitude)
-      const latitudes = route.spots.map((spot) => spot.latitude)
+    function projectLatLngs(route, latLngs) {
+      const routeLatLngs = getRoutePathLatLngs(route)
+      const longitudes = routeLatLngs.map((point) => point[1])
+      const latitudes = routeLatLngs.map((point) => point[0])
       const minLon = Math.min(...longitudes)
       const maxLon = Math.max(...longitudes)
       const minLat = Math.min(...latitudes)
@@ -1471,10 +2941,14 @@
       const lonRange = maxLon - minLon || 1
       const latRange = maxLat - minLat || 1
 
-      return route.spots.map((spot) => ({
-        x: 11 + ((spot.longitude - minLon) / lonRange) * 78,
-        y: 82 - ((spot.latitude - minLat) / latRange) * 62
+      return latLngs.map((point) => ({
+        x: 11 + ((point[1] - minLon) / lonRange) * 78,
+        y: 82 - ((point[0] - minLat) / latRange) * 62
       }))
+    }
+
+    function projectPoints(route) {
+      return projectLatLngs(route, route.spots.map((spot) => [spot.latitude, spot.longitude]))
     }
 
     function render() {
@@ -1485,11 +2959,13 @@
 
       const route = routes[activeRouteIndex]
       const spot = route.spots[activeSpotIndex]
+      const routeSegments = getRouteSegments(route)
       const points = projectPoints(route)
       const accent = route.accent
 
       document.documentElement.style.setProperty('--accent', accent)
       elements.routePanel.style.setProperty('--accent', accent)
+      elements.startCard.style.setProperty('--accent', accent)
       elements.spotCard.style.setProperty('--accent', accent)
 
       elements.tabs.innerHTML = routes.map((item, index) => `
@@ -1509,8 +2985,11 @@
       elements.routeDistance.textContent = route.distance
       elements.routeTransport.textContent = route.transport
       elements.routeSummary.textContent = route.summary
+      elements.routeModeSummary.innerHTML = renderModePills(route)
+      renderStartPoint()
 
-      const fallbackRoutePath = points.map((point, index) => {
+      const fallbackPoints = projectLatLngs(route, getRoutePathLatLngs(route))
+      const fallbackRoutePath = fallbackPoints.map((point, index) => {
         return `${index === 0 ? 'M' : 'L'} ${point.x.toFixed(2)} ${point.y.toFixed(2)}`
       }).join(' ')
 
@@ -1539,7 +3018,33 @@
       elements.spotVisual.src = spot.image || route.cover
       elements.spotVisual.alt = `${spot.name}图片`
       elements.spotTags.innerHTML = spot.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')
-      elements.mapLink.href = `https://uri.amap.com/marker?position=${spot.longitude},${spot.latitude}&name=${encodeURIComponent(spot.name)}`
+      elements.routeSegments.innerHTML = routeSegments.map((segment, index) => `
+        <div class="segment-item">
+          <span class="segment-mode ${segment.mode}">${segment.style.label}</span>
+          <span class="segment-name">${index + 1}. ${escapeHtml(segment.from.name)} → ${escapeHtml(segment.to.name)}</span>
+          <span class="segment-distance">${segment.distance.toFixed(1)} km</span>
+        </div>
+      `).join('')
+
+      const currentSegment = activeSpotIndex > 0 ? routeSegments[activeSpotIndex - 1] : null
+      const startPoint = getEffectiveStartPoint()
+      if (startPoint) {
+        const startDistance = estimateKm(startPoint, spot)
+        if (startDistance <= 0.05) {
+          elements.mapLink.textContent = '查看地点'
+          elements.mapLink.href = buildAmapMarkerUrl(spot)
+        } else {
+          const startStyle = getStartNavigationStyle(startPoint, spot)
+          elements.mapLink.textContent = `从出发点${startStyle.label}导航`
+          elements.mapLink.href = buildAmapNavigationUrl(startPoint, spot, startStyle)
+        }
+      } else if (currentSegment) {
+        elements.mapLink.textContent = `${currentSegment.style.label}导航`
+        elements.mapLink.href = buildAmapNavigationUrl(currentSegment.from, spot, currentSegment.style)
+      } else {
+        elements.mapLink.textContent = '地点导航'
+        elements.mapLink.href = buildAmapMarkerUrl(spot)
+      }
 
       elements.timeline.innerHTML = route.spots.map((item, index) => `
         <button class="timeline-item ${index === activeSpotIndex ? 'is-current' : ''}" type="button" data-spot="${index}">
@@ -1547,7 +3052,7 @@
           <img class="timeline-thumb" src="${item.image || route.cover}" alt="">
           <span>
             <span class="timeline-title">${item.name}</span>
-            <span class="timeline-meta">${item.stay} · ${item.category}</span>
+            <span class="timeline-meta">${item.stay} · ${item.category}${index > 0 ? ` · ${routeSegments[index - 1].style.label}到达` : ''}</span>
             <span class="timeline-note">${item.highlight}</span>
           </span>
           <span class="timeline-arrow">›</span>
@@ -1555,10 +3060,88 @@
       `).join('')
     }
 
+    function createPresetStartPoint(presetId) {
+      const preset = startPresetPoints.find((item) => item.id === presetId)
+      if (!preset) return null
+      if (preset.dynamic) {
+        return { presetId: preset.id, source: '常用点' }
+      }
+      return {
+        id: preset.id,
+        name: preset.name,
+        latitude: preset.latitude,
+        longitude: preset.longitude,
+        source: '常用点'
+      }
+    }
+
+    function getLocationErrorMessage(error) {
+      if (error?.code === 1) return '浏览器没有获得定位权限，可以重新授权，或先选择下面的常用出发点。'
+      if (error?.code === 2) return '暂时无法获取当前位置，可以换到室外或选择常用出发点。'
+      if (error?.code === 3) return '定位超时了，可以再试一次，或先选择常用出发点。'
+      return '当前浏览器暂时不能定位，可以先选择常用出发点。'
+    }
+
     elements.entryRoutes.addEventListener('click', (event) => {
       const button = event.target.closest('[data-route]')
       if (!button) return
       openRoute(button.dataset.route)
+    })
+
+    elements.routePickerControls.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-picker]')
+      if (!button) return
+      routePickerState[button.dataset.picker] = button.dataset.value
+      renderRoutePicker()
+    })
+
+    elements.pickerOpenRoute.addEventListener('click', () => {
+      openRoute(elements.pickerOpenRoute.dataset.route || 0)
+    })
+
+    elements.startPresets.addEventListener('click', (event) => {
+      const button = event.target.closest('[data-start-preset]')
+      if (!button) return
+      const point = createPresetStartPoint(button.dataset.startPreset)
+      if (point) {
+        setActiveStartPoint(point)
+      }
+    })
+
+    elements.locateStart.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        startPointMessage = '当前浏览器不支持定位，可以先选择常用出发点。'
+        renderStartPoint()
+        return
+      }
+
+      startPointMessage = '正在定位当前位置，请在浏览器提示里允许位置权限。'
+      elements.locateStart.disabled = true
+      renderStartPoint()
+
+      navigator.geolocation.getCurrentPosition((position) => {
+        elements.locateStart.disabled = false
+        setActiveStartPoint({
+          id: 'current-location',
+          name: '我的当前位置',
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+          source: '定位'
+        })
+      }, (error) => {
+        elements.locateStart.disabled = false
+        startPointMessage = getLocationErrorMessage(error)
+        renderStartPoint()
+      }, {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      })
+    })
+
+    elements.clearStart.addEventListener('click', () => {
+      setActiveStartPoint(null)
     })
 
     elements.homeButton.addEventListener('click', () => {
@@ -1607,6 +3190,7 @@
     })
 
     renderEntry()
+    renderRoutePicker()
 
     const initialRoute = new URLSearchParams(window.location.search).get('route')
     if (initialRoute) {
@@ -1618,3 +3202,4 @@
   </script>
 </body>
 </html>
+
