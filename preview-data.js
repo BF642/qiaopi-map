@@ -9,13 +9,13 @@
     "theme": "å¼å è¡åºãä¾¨æ¹æ¡£æ¡ãé®æ¿æ§å",
     "summary": "ä»å°å¬å­å¼å åºè¿å¥æ±å¤´èåï¼ä¸²èä¾¨æ¹æç©é¦ãé®æ¿æ»å±æ§åä¸è¥¿å ¤æµ·å²¸ï¼éåä½ä¸ºç¬¬ä¸æ¬¡è®¤è¯ä¾¨æ¹æåçåå¸æ¼«æ¸¸çº¿ã",
     "accent": "#0f6b5a",
-    "cover": "/assets/photos/real-ref/ref-cover-shantou.jpg",
+    "cover": "/assets/photos/real/real-cover-shantou.jpg",
     "spots": [
       {
         "id": "xiaogongyuan",
         "name": "å°å¬å­å¼å åº",
         "address": "æ±å¤´å¸éå¹³åºå½å¹³è·¯ä¸å¸¦",
-        "image": "/assets/photos/real-ref/ref-xiaogongyuan.jpg",
+        "image": "/assets/photos/real/real-xiaogongyuan.jpg",
         "latitude": 23.353295,
         "longitude": 116.673756,
         "stay": "45 åé",
@@ -33,7 +33,7 @@
         "id": "qiaopi-museum",
         "name": "ä¾¨æ¹æç©é¦",
         "address": "æ±å¤´å¸éå¹³åºå¤é©¬è·¯ 18 å·éè¿",
-        "image": "/assets/photos/real-ref/ref-qiaopi-museum-shantou.jpg",
+        "image": "/assets/photos/real/real-qiaopi-museum-shantou.jpg",
         "latitude": 23.352894,
         "longitude": 116.674501,
         "stay": "60 åé",
@@ -51,7 +51,7 @@
         "id": "post-office",
         "name": "æ±å¤´é®æ¿æ»å±æ§å",
         "address": "æ±å¤´å¸éå¹³åºå¤é©¬è·¯è¿æµ·æ»¨è·¯",
-        "image": "/assets/photos/real-ref/ref-qiaopi-museum-shantou.jpg",
+        "image": "/assets/photos/real/real-post-office.jpg",
         "latitude": 23.3529116,
         "longitude": 116.674114,
         "stay": "25 åé",
@@ -69,7 +69,7 @@
         "id": "xidi-park",
         "name": "è¥¿å ¤å¬å­",
         "address": "æ±å¤´å¸éå¹³åºå®å¹³è·¯è¥¿å ¤æµ·æ»¨",
-        "image": "/assets/photos/real-ref/ref-zhanglin-port.jpg",
+        "image": "/assets/photos/real/real-xidi-park.jpg",
         "latitude": 23.3479456,
         "longitude": 116.6644853,
         "stay": "35 åé",
@@ -95,13 +95,13 @@
     "theme": "å¤æ¸¯ãä¾¨å®ãä¹¡åå®æ",
     "summary": "ä»åå¸åºæµ·å£èµ°åä¾¨ä¹¡è¹å°ï¼çè§£ä¾¨æ¹ä»æ¸¯å£ãæ¹å±è¿å¥å®¶æå®é¢åæè½çæ´»çè·¯å¾ã",
     "accent": "#8a5738",
-    "cover": "/assets/photos/real-ref/ref-cover-shantou.jpg",
+    "cover": "/assets/photos/real/real-zhanglin-waterway.jpg",
     "spots": [
       {
         "id": "xidi-port",
         "name": "è¥¿å ¤æµ·å²¸",
         "address": "æ±å¤´å¸éå¹³åºè¥¿å ¤çåº",
-        "image": "/assets/photos/real-ref/ref-zhanglin-port.jpg",
+        "image": "/assets/photos/real/real-xidi-coast.jpg",
         "latitude": 23.3479456,
         "longitude": 116.6644853,
         "stay": "25 åé",
@@ -119,7 +119,7 @@
         "id": "gounan-xudi",
         "name": "æ²åè®¸å°",
         "address": "æ±å¤´å¸éå¹³åºææµ¦è¡éæ²åç¤¾åº",
-        "image": "/assets/photos/real-ref/ref-cover-shantou.jpg",
+        "image": "/assets/photos/real/real-gounan-xudi.jpg",
         "latitude": 23.427777,
         "longitude": 116.678049,
         "stay": "60 åé",
@@ -137,7 +137,7 @@
         "id": "chen-cihong",
         "name": "éæé»æå±",
         "address": "æ±å¤´å¸æ¾æµ·åºéé½éåç¾æ",
-        "image": "/assets/photos/real-ref/ref-chen-cihong.jpg",
+        "image": "/assets/photos/real/real-chen-cihong.jpg",
         "latitude": 23.56718,
         "longitude": 116.745544,
         "stay": "90 åé",
@@ -155,7 +155,7 @@
         "id": "zhanglin-port",
         "name": "æ¨æå¤æ¸¯",
         "address": "æ±å¤´å¸æ¾æµ·åºä¸ééæ¨æå¤æ¸¯çåº",
-        "image": "/assets/photos/real-ref/ref-zhanglin-port.jpg",
+        "image": "/assets/photos/real/real-zhanglin-port.jpg",
         "latitude": 23.560395,
         "longitude": 116.828118,
         "stay": "60 åé",
@@ -181,13 +181,13 @@
     "theme": "æ¡£æ¡éè¯»ãåå¸æ¼«æ¸¸ãä¾¨ä¹¡å¯»è®¿",
     "summary": "ä¸ºç å­¦ãäº²å­åæåæ·±åº¦æ¸¸è®¾è®¡ï¼ç¬¬ä¸å¤©è¯»ä¾¨æ¹ä¸èµ°èåï¼ç¬¬äºå¤©è¿å¥ä¾¨ä¹¡å¯»æ¾å®¶ä¹¦èåçå°åãå®¶æåå»ºç­ã",
     "accent": "#a33f3f",
-    "cover": "/assets/photos/real-ref/ref-cover-shantou.jpg",
+    "cover": "/assets/photos/real/real-qiaopi-documents.jpg",
     "spots": [
       {
         "id": "qiaopi-museum-deep",
         "name": "ä¾¨æ¹æç©é¦",
         "address": "æ±å¤´å¸éå¹³åºå¤é©¬è·¯ 18 å·éè¿",
-        "image": "/assets/photos/real-ref/ref-qiaopi-museum-shantou.jpg",
+        "image": "/assets/photos/real/real-qiaopi-museum-interior.jpg",
         "latitude": 23.352894,
         "longitude": 116.674501,
         "stay": "90 åé",
@@ -205,7 +205,7 @@
         "id": "opening-museum",
         "name": "æ±å¤´å¼å æåéåé¦",
         "address": "æ±å¤´å¸éå¹³åºæ°¸å¹³è·¯ 1 å·éè¿",
-        "image": "/assets/photos/real-ref/ref-xiaogongyuan.jpg",
+        "image": "/assets/photos/real/real-opening-museum.jpg",
         "latitude": 23.3522259,
         "longitude": 116.6738707,
         "stay": "50 åé",
@@ -220,28 +220,28 @@
         "tip": "ä¸å°å¬å­è¡åºè·ç¦»è¿ï¼å¯è¿ææ­¥è¡æ®µã"
       },
       {
-        "id": "qiaopi-square",
-        "name": "ä¾¨æ¹è®°å¿è¡åº",
-        "address": "æ±å¤´å¸éå¹³åºå°å¬å­åå²æåè¡åº",
-        "image": "/assets/photos/real-ref/ref-xiaogongyuan.jpg",
-        "latitude": 23.353533,
-        "longitude": 116.671157,
+        "id": "qiaopi-memorial",
+        "name": "è¥¿å ¤ä¾¨æ¹çºªå¿µå°",
+        "address": "æ±å¤´å¸éå¹³åºè¥¿å ¤å¬å­å",
+        "image": "/assets/photos/real/real-qiaopi-memorial.jpg",
+        "latitude": 23.3479456,
+        "longitude": 116.6644853,
         "stay": "40 åé",
-        "category": "è¡åº",
+        "category": "çºªå¿µå°",
         "tags": [
-          "åå¸è§å¯",
-          "åå·",
-          "è¡å··"
+          "ä¸çè®°å¿",
+          "ä¾¨æ¹çºªå¿µ",
+          "æµ·å²¸"
         ],
-        "qiaopi": "è¡åºä¸­çåå·ãä¼é¦åé®æ¿éå­å±åç»æäºä¾¨æ¹å¨åå¸ä¸­æµå¨çåºæ¯ã",
-        "highlight": "æâå¯åºãè½¬è¿ãéè¾¾âçé¡ºåºéèµ°ä¸æ®µå®¶ä¹¦è·¯å¾ã",
-        "tip": "éåæ­éæç»å°å¾æçç« æ´»å¨ã"
+        "qiaopi": "è¥¿å ¤ä¾¨æ¹çºªå¿µå°æä¾¨æ¹åå¥ä¸çè®°å¿åå½çåå²ä¸åºæµ·å£ç©ºé´èç³»èµ·æ¥ï¼æ¯ææ¡£æ¡æäºè½å°åå¸ç°åºçèç¹ã",
+        "highlight": "ççºªå¿µå¢ãæµ·å²¸çº¿ååºæµ·æ¹åï¼æå±é¦ä¸­çå®¶ä¹¦ä¸çå®å£å²¸ç©ºé´å¯¹åºèµ·æ¥ã",
+        "tip": "ä¸å°å¬å­ãä¾¨æ¹æç©é¦è¿ææ­¥è¡æéªè¡æ®µæ´é¡ºã"
       },
       {
         "id": "chen-cihong-deep",
         "name": "éæé»æå±",
         "address": "æ±å¤´å¸æ¾æµ·åºéé½éåç¾æ",
-        "image": "/assets/photos/real-ref/ref-chen-cihong.jpg",
+        "image": "/assets/photos/real/real-chen-cihong-detail.jpg",
         "latitude": 23.56718,
         "longitude": 116.745544,
         "stay": "120 åé",
@@ -267,13 +267,13 @@
     "theme": "æ³å·æ¹é¦ãå¦é¨æ§ä¿¡å±ãæ¼³å·å¤©ä¸æ»å±",
     "summary": "ä»æ³å·å¤åçæ¹ä¿¡è®°å¿åºåï¼ç»å¦é¨è¿ä»£å£å²¸ä¿¡å±ï¼åå°æ¼³å·å¤©ä¸æ»å±ï¼åç°é½åä¾¨æ¹ä»æ°é´é¶ä¿¡ãæµ·ä¸åè´¸å°ä¾¨ä¹¡å®¶æçè·¨åç½ç»ã",
     "accent": "#286c8f",
-    "cover": "/assets/photos/real-ref/ref-cover-minnan.jpg",
+    "cover": "/assets/photos/real/real-cover-minnan.jpg",
     "spots": [
       {
         "id": "quanzhou-qiaopi",
         "name": "æ³å·ä¾¨æ¹é¦",
         "address": "æ³å·å¸é²¤ååºä¸­å±±è·¯ 345 å·éåçº¯æå±",
-        "image": "/assets/photos/real-ref/ref-quanzhou-qiaopi.jpg",
+        "image": "/assets/photos/real/real-quanzhou-qiaopi.jpg",
         "latitude": 24.91236,
         "longitude": 118.58658,
         "stay": "60 åé",
@@ -291,7 +291,7 @@
         "id": "licheng-qiaopi",
         "name": "é²¤åä¾¨æ¹é¦",
         "address": "æ³å·å¸é²¤ååºéæ¿å·· 14 å·",
-        "image": "/assets/photos/real-ref/ref-quanzhou-qiaopi.jpg",
+        "image": "/assets/photos/real/real-licheng-qiaopi.jpg",
         "latitude": 24.91452,
         "longitude": 118.58713,
         "stay": "45 åé",
@@ -309,7 +309,7 @@
         "id": "wanggong-xinji",
         "name": "çå®«ä¾¨æ¹å±ç¤ºé¦",
         "address": "æ³å·å¸é²¤ååºæ±åè¡éçå®«ç¤¾åºçé¡ºå´ä¿¡å±æ§åä¸å¸¦",
-        "image": "/assets/photos/real-ref/ref-wanggong-xinji.jpg",
+        "image": "/assets/photos/real/real-wanggong-xinji.jpg",
         "latitude": 24.88736,
         "longitude": 118.54758,
         "stay": "50 åé",
@@ -327,7 +327,7 @@
         "id": "xiamen-qiaopi",
         "name": "å¦é¨ä¾¨æ¹é¦",
         "address": "å¦é¨å¸ææåºå¤§åè·¯ 7 å·",
-        "image": "/assets/photos/real-ref/ref-xiamen-qiaopi.jpg",
+        "image": "/assets/photos/real/real-xiamen-qiaopi.jpg",
         "latitude": 24.45678,
         "longitude": 118.08112,
         "stay": "60 åé",
@@ -345,7 +345,7 @@
         "id": "tianyi-zongju",
         "name": "å¤©ä¸æ»å±æ§å",
         "address": "æ¼³å·å¸é¾æµ·åºè§ç¾éæµä¼ æ",
-        "image": "/assets/photos/real-ref/ref-tianyi-zongju.jpg",
+        "image": "/assets/photos/real/real-tianyi-zongju.jpg",
         "latitude": 24.49148,
         "longitude": 117.88318,
         "stay": "75 åé",
@@ -362,4 +362,3 @@
     ]
   }
 ]
-
