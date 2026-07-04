@@ -1,9 +1,9 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ä¾¨æ¹ææ¸¸è·¯çº¿å¾é¢è§</title>
+  <title>侨批旅游路线图预览</title>
   <link rel="stylesheet" href="./assets/vendor/leaflet/leaflet.css">
   <style>
     :root {
@@ -815,13 +815,13 @@
     <header class="topbar">
       <div>
         <span class="brand-kicker">Shantou & Minnan Qiaopi Trail</span>
-        <h1 class="brand-title">ä¾¨æ¹ææ¸¸è·¯çº¿å¾</h1>
+        <h1 class="brand-title">侨批旅游路线图</h1>
       </div>
-      <button class="icon-button" id="saveButton" type="button" aria-label="æ¶èå½åè·¯çº¿">â</button>
+      <button class="icon-button" id="saveButton" type="button" aria-label="收藏当前路线">☆</button>
     </header>
 
     <main class="layout">
-      <section class="map-panel" id="mapPanel" aria-label="è·¯çº¿å°å¾é¢è§">
+      <section class="map-panel" id="mapPanel" aria-label="路线地图预览">
         <div class="leaflet-map" id="leafletMap" aria-hidden="true"></div>
         <div class="fallback-map" aria-hidden="true">
           <svg viewBox="0 0 100 100" preserveAspectRatio="none">
@@ -854,16 +854,16 @@
             <path class="map-road-minor" d="M55 5 L51 21 L51 40 L55 58 L53 77 L49 96"></path>
             <path class="map-road-minor" d="M84 3 L82 18 L84 34 L81 51 L85 70 L82 97"></path>
           </svg>
-          <div class="fallback-label place" style="left: 22%; top: 25%;">æ±å¤´èå</div>
-          <div class="fallback-label place" style="left: 77%; top: 28%;">æ¾æµ·ä¾¨ä¹¡</div>
-          <div class="fallback-label place" style="left: 36%; top: 72%;">æ³å·å¤å</div>
-          <div class="fallback-label place" style="left: 71%; top: 73%;">å¦é¨å£å²¸</div>
-          <div class="fallback-label" style="left: 54%; top: 16%;">é¾æ¹åº</div>
-          <div class="fallback-label" style="left: 18%; top: 58%;">éå¹³åº</div>
-          <div class="fallback-label road" style="left: 47%; top: 31%;">åå¸ä¸»å¹²è·¯</div>
-          <div class="fallback-label road" style="left: 56%; top: 63%;">æ²¿æµ·éé</div>
-          <div class="fallback-label water" style="left: 40%; top: 48%;">æ²³é / åæ¹¾</div>
-          <div class="fallback-label water" style="left: 83%; top: 88%;">æµ·å²¸çº¿</div>
+          <div class="fallback-label place" style="left: 22%; top: 25%;">汕头老城</div>
+          <div class="fallback-label place" style="left: 77%; top: 28%;">澄海侨乡</div>
+          <div class="fallback-label place" style="left: 36%; top: 72%;">泉州古城</div>
+          <div class="fallback-label place" style="left: 71%; top: 73%;">厦门口岸</div>
+          <div class="fallback-label" style="left: 54%; top: 16%;">龙湖区</div>
+          <div class="fallback-label" style="left: 18%; top: 58%;">金平区</div>
+          <div class="fallback-label road" style="left: 47%; top: 31%;">城市主干路</div>
+          <div class="fallback-label road" style="left: 56%; top: 63%;">沿海通道</div>
+          <div class="fallback-label water" style="left: 40%; top: 48%;">河道 / 内湾</div>
+          <div class="fallback-label water" style="left: 83%; top: 88%;">海岸线</div>
         </div>
         <img class="map-cover" id="mapCover" alt="">
         <div class="map-scrim"></div>
@@ -880,7 +880,7 @@
       </section>
 
       <aside class="side-panel">
-        <nav class="tabs" id="tabs" aria-label="è·¯çº¿åæ¢"></nav>
+        <nav class="tabs" id="tabs" aria-label="路线切换"></nav>
 
         <section class="panel" id="routePanel">
           <img class="route-cover" id="routeCover" alt="">
@@ -893,11 +893,11 @@
           </div>
           <div class="metrics">
             <div class="metric">
-              <span>è·ç¦»</span>
+              <span>距离</span>
               <strong id="routeDistance"></strong>
             </div>
             <div class="metric">
-              <span>äº¤é</span>
+              <span>交通</span>
               <strong id="routeTransport"></strong>
             </div>
           </div>
@@ -915,12 +915,12 @@
           <p class="copy" id="spotCopy"></p>
           <div class="tags" id="spotTags"></div>
           <div class="actions">
-            <a class="action primary" id="mapLink" target="_blank" rel="noreferrer">å°å¾å¯¼èª</a>
-            <button class="action secondary" id="nextSpot" type="button">ä¸ä¸ç«</button>
+            <a class="action primary" id="mapLink" target="_blank" rel="noreferrer">地图导航</a>
+            <button class="action secondary" id="nextSpot" type="button">下一站</button>
           </div>
         </section>
 
-        <div class="section-title">è·¯çº¿ç«ç¹</div>
+        <div class="section-title">路线站点</div>
         <div class="timeline" id="timeline"></div>
       </aside>
     </main>
@@ -1004,7 +1004,7 @@
       L.tileLayer('https://webst0{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', {
         maxZoom: 18,
         subdomains: ['1', '2', '3', '4'],
-        attribution: '&copy; é«å¾·å°å¾'
+        attribution: '&copy; 高德地图'
       }).addTo(leafletMap)
 
       leafletLayer = L.layerGroup().addTo(leafletMap)
@@ -1144,7 +1144,7 @@
       elements.mapRouteTheme.textContent = route.theme
       elements.mapCover.src = route.cover
       elements.routeCover.src = route.cover
-      elements.routeCover.alt = `${route.name}å°é¢`
+      elements.routeCover.alt = `${route.name}封面`
       elements.routeName.textContent = route.name
       elements.routeTheme.textContent = route.theme
       elements.routeDuration.textContent = route.duration
@@ -1172,14 +1172,14 @@
         `
       }).join('')
 
-      elements.saveButton.textContent = savedRoutes.has(route.id) ? 'â' : 'â'
-      elements.spotOrder.textContent = `ç¬¬ ${activeSpotIndex + 1} ç«`
+      elements.saveButton.textContent = savedRoutes.has(route.id) ? '★' : '☆'
+      elements.spotOrder.textContent = `第 ${activeSpotIndex + 1} 站`
       elements.spotCategory.textContent = spot.category
       elements.spotName.textContent = spot.name
       elements.spotAddress.textContent = spot.address
       elements.spotCopy.textContent = spot.qiaopi
       elements.spotVisual.src = spot.image || route.cover
-      elements.spotVisual.alt = `${spot.name}å¾ç`
+      elements.spotVisual.alt = `${spot.name}图片`
       elements.spotTags.innerHTML = spot.tags.map((tag) => `<span class="tag">${tag}</span>`).join('')
       elements.mapLink.href = `https://uri.amap.com/marker?position=${spot.longitude},${spot.latitude}&name=${encodeURIComponent(spot.name)}`
 
@@ -1189,10 +1189,10 @@
           <img class="timeline-thumb" src="${item.image || route.cover}" alt="">
           <span>
             <span class="timeline-title">${item.name}</span>
-            <span class="timeline-meta">${item.stay} Â· ${item.category}</span>
+            <span class="timeline-meta">${item.stay} · ${item.category}</span>
             <span class="timeline-note">${item.highlight}</span>
           </span>
-          <span class="timeline-arrow">âº</span>
+          <span class="timeline-arrow">›</span>
         </button>
       `).join('')
     }
@@ -1240,4 +1240,3 @@
   </script>
 </body>
 </html>
-
